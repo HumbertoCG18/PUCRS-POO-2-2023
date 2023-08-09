@@ -39,7 +39,7 @@ Usando o VSCode no GitPod ou não você pode compilar e executar usando a opçã
 
 <center><br><h1> Códigos</h1></center>
 
-## Parte 1
+<h2> Parte 1</h2>
 
 ```java
 // AppP1.java
@@ -60,7 +60,7 @@ public class App{
   }
 ```
 
-## Parte 2
+<h2>Parte 2</h2>
 
 ```java
 // App.java
