@@ -1,6 +1,6 @@
 package Aula1_PEVS;
 
-public class App {
+public class AppIntroduction {
     public static void main(String[] args) throws Exception {
         System.out.println("\nHi!");
         String version = System.getProperty("java.version");
