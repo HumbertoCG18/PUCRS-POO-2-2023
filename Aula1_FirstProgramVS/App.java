@@ -1,4 +1,4 @@
-package Aula1_PEVS;
+package Aula1_FirstProgramVS;
 import java.util.Scanner;
 
 public class App{

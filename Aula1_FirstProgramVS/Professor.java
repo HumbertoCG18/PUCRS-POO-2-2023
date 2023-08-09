@@ -1,7 +1,7 @@
-package Aula1_PEVS;
+package Aula1_FirstProgramVS;
 
 public class Professor {
-    private String nome;
+    private String nome;    
     private int anosExperiencia;
 
     public Professor(String nome, int anosExperiencia) {

@@ -1,4 +1,4 @@
-package Aula1_PEVS;
+package Aula1_FirstProgramVS;
 
 public class AppIntroduction {
     public static void main(String[] args) throws Exception {
