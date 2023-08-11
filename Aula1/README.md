@@ -1,10 +1,8 @@
-# Exercício Introdutório
+<h1> Exercício Introdutório / Etapa 1: preparação </h1>
 
-Primeiro exercício ministrado da mat
-
-## Instalação
-1) Baixe o exemplo das classes "Placa" e "Veiculo" disponíveis no Moodle.
-2) Abra o exemplo no VSCode, estude o código e responda as perguntas que seguem:
+### <h2>Instalação</h2>
+<p>1) Baixe o exemplo das classes "Placa" e "Veiculo" disponíveis no Moodle.</p>
+<p>2) Abra o exemplo no VSCode, estude o código e responda as perguntas que seguem:</p>
 
 ## Códigos
 
@@ -128,7 +126,7 @@ public class Veiculo{
 
 ```
 
-## Questões
+ ### <h1>Questões</h1>
 
 A) Quais são os atributos (variáveis) da classe "Placa"?
 
@@ -160,8 +158,28 @@ N) De que maneira funcionam os métodos "getCombustivelNoTanque", "abastece" e "
 
 O) Quantas instâncias de que classes são criadas no "main"?
 
+
+
+
+<br><h1>Etapa 2: exercícios de programação </h2>
+
+<p> 1. Reescreva o método “main” de maneira que o mesmo receba pelos argumentos da linha de comando a placa do veículo, a quantidade de combustível que o mesmo deve ser abastecido e a distância que ele deve percorrer e imprima: os dados do veículo, a distância efetivamente percorrida (com o combustível disponível) e o combustível remanescente no tanque. Faça consistência sobre a quantidade e o tipo dos parâmetros informados exibindo uma mensagem adequada se for o caso.</p>
+
+<p> 2. Do jeito que foi projetada, a classe “Veiculo” modela um veículo cujo tanque de combustível tem capacidade infinita. Altere a classe “Veiculo” de maneira que o tanque de combustível passe a ter uma capacidade finita.</p>
+
+<p>3. Reescreva o método "main" da seguinte forma: crie um arranjo e armazene no mesmo 5 veículos diferentes. Apresente para o usuário um menu com três opções: "1) Abastecer", "2) dirigir" e "3) Fim".</p>
+
+<p>A opção 1 solicita a placa do veículo a ser abastecido e a quantidade de combustível e, ao final da operação, exibe na tela a quantidade total de combustível no veículo após o abastecimento. A opção 2 solicita a placa do veículo que o usuário pretende dirigir e a distância a ser percorrida e, ao final da operação, imprime na tela a distância efetivamente percorrida e a quantidade de combustível remanescente no tanque. Tanto a opção 1 como a opção 2 devem exibir a mensagem "Veiculo não encontrado" caso a placa informada não conste do cadastro (arranjo). A opção 3 deve imprimir os dados de todos os veículos cadastrados e encerrar o programa.</p>
+
+<p>4. Escreva um novo código para o método "main": crie uma instancia da classe "Placa" e informe a esta mesma placa para duas instancias de "Veiculo". Exiba na tela as informações de cada veículo a partir do método "toString". Em seguida, usando o método "setPais" da classe "Veiculo", altere o país do segundo veículo e imprima.</p>
+
+
+
+
+
 ## Considerações Finais
 
 3) Compile e execute o código.
 
 4) Certifique-se de ter dominado todo o processo de edição, compilação e execução de programas proposto para este semestre.
+
