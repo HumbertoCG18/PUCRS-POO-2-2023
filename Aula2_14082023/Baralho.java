@@ -1,5 +1,3 @@
-package Aula2_14082023;
-
 public class Baralho {
     private Deck cartas;
 

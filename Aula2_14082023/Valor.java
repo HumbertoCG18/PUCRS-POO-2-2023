@@ -1,5 +1,3 @@
-package Aula2_14082023;
-
 public enum Valor {
     AS,DOIS,TRES,QUATRO,CINCO,SEIS,SETE,OITO,NOVE,DEZ,VALETE,DAMA,REI;
 }

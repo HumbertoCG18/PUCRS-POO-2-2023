@@ -1,5 +1,4 @@
-package Aula1_FirstProgramVS;
-
+package Aula1_FirstProgramVS_09_08_2023;
 public class AppIntroduction {
     public static void main(String[] args) throws Exception {
         System.out.println("\nHi!");

@@ -1,4 +1,3 @@
-package Aula2_14082023;
 
 public class App {
     public static void main(String[] args) throws Exception {
@@ -33,7 +32,7 @@ public class App {
                 jogador2.insereEmbaixo(cj1);
                 System.out.println("Jogador 2 ganhou a rodada");
             }
-            // Verifica se acabou   
+            // Verifica se acabou
             if (jogador1.vazio() || jogador2.vazio()){
                 acabou = true;
             }

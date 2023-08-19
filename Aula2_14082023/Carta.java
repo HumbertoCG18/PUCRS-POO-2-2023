@@ -1,5 +1,3 @@
-package Aula2_14082023;
-
 public class Carta {
     private Naipe naipe;
     private Valor valor;
