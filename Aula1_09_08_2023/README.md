@@ -1,8 +1,8 @@
 <h1> Exercício Introdutório / Etapa 1: preparação </h1>
 
 ### <h2>Instalação</h2>
-<p>1) Baixe o exemplo das classes "Placa" e "Veiculo" disponíveis no Moodle.</p>
-<p>2) Abra o exemplo no VSCode, estude o código e responda as perguntas que seguem:</p>
+1. <p>Baixe o exemplo das classes "Placa" e "Veiculo" disponíveis no Moodle.</p>
+1. <p>Abra o exemplo no VSCode, estude o código e responda as perguntas que seguem:</p>
 
 ## Códigos
 

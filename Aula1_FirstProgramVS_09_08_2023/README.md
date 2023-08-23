@@ -1,4 +1,4 @@
-<center> <h1>Roteiro para primeiro exemplo no VSCode</h1> </center>
+# <center>Roteiro para primeiro exemplo no VSCode</center> #
 
 O objetivo deste roteiro é mostrar o processo de criação de projetos, compilação e execução de programas no Visual Studio Code.
 
@@ -19,33 +19,30 @@ public class App {
 
 ```
 
----
 
 Ver mais propriedades em: [The Java](https://docs.oracle.com/javase/tutorial/essential/environment/sysprop.html)
 
-<p>O objetivo do próximo exercício é partir de um programa que tem apenas uma classe e evoluir o mesmo para um projeto com duas classes.<p>
+<p>O objetivo do próximo exercício é partir de um programa que tem apenas uma classe e evoluir o mesmo para um projeto com duas classes.</p>
+<br>
 
----
+# <center>Exercício 1</center> #
 
-<center> <br> <h1>Exercício 1</h1></center>
+<p>Usando o VSCode no GitPod ou não você pode compilar e executar usando a opção “run” do IDE. Exercite também a “compilação manual” direto pela linha de comando. Isso é importante para aquelas situações em que não houver IDE disponível ou as configurações da IDE estiverem com problemas.</p>
 
-Usando o VSCode no GitPod ou não você pode compilar e executar usando a opção “run” do IDE. Exercite também a “compilação manual” direto pela linha de comando. Isso é importante para aquelas situações em que não houver IDE disponível ou as configurações da IDE estiverem com problemas.
+*  Para compilar: (assumindo que os arquivos fontes estão na pasta “src” e que os “.class” devem ser gerados na pasta “bin"). Use o comando: javac ./src/*.java -d ./bin
 
-    · Para compilar: (assumindo que os arquivos fontes estão na pasta “src” e que os “.class” devem ser gerados na pasta “bin"). Use o comando: javac ./src/*.java -d ./bin
+* Para executar: (assumindo que os “.class” estão na pasta “bin”) e que o arquivo que contém o “main” é o “App.class”: java –cp ./bin Ap
 
-    · Para executar: (assumindo que os “.class” estão na pasta “bin” e que o arquivo que contém o “main” é o “App.class”: java –cp ./bin Ap
 
----
+# <center>Códigos</center> #
 
-<center><br><h1> Códigos</h1></center>
-
-<h2> Parte 1</h2>
+# Parte 1 #
 
 ```java
 // AppP1.java
 import java.util.Scanner;
 
-public class App{
+public class AppP1{
     public static void main(String args[]){ 
       Scanner s = new Scanner(System.in);
       System.out.println("Nome do professor?");
@@ -60,7 +57,7 @@ public class App{
   }
 ```
 
-<h2>Parte 2</h2>
+# Parte 2 #
 
 ```java
 // App.java
