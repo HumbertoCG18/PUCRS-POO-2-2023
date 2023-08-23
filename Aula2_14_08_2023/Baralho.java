@@ -1,3 +1,4 @@
+package Aula2_14_08_2023;
 public class Baralho {
     private Deck cartas;
 

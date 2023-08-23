@@ -1,3 +1,4 @@
+package Aula1_09_08_2023;
 public class Veiculo{
     private final double consumoPorLitro = 10;
     private Placa placa;

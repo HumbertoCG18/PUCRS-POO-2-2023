@@ -1,3 +1,4 @@
+package Aula2_14_08_2023;
 import java.util.Random;
 
 public class Deck {
