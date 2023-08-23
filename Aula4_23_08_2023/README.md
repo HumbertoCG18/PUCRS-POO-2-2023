@@ -11,7 +11,7 @@
  
  - Só é possível engatar uma locomotiva ou vagão por vez e sempre no final do trem. A locomotiva ou vagão engatados deixam de estar “livres” para serem usados em outro trem (deixam a garagem).
 
- As informações que são mantidas em relação as locomotivas, vagões e trens são as que seguem. ##
+ <p>As informações que são mantidas em relação as locomotivas, vagões e trens são as que seguem.</p>
 
 # <h2>Locomotiva:</h2> #
 
