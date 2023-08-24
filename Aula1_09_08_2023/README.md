@@ -1,4 +1,4 @@
-<h1> Exercício Introdutório / Etapa 1: preparação </h1>
+# Exercício Introdutório / Etapa 1: preparação #
 
 ### <h2>Instalação</h2>
 1. <p>Baixe o exemplo das classes "Placa" e "Veiculo" disponíveis no Moodle.</p>
@@ -126,7 +126,7 @@ public class Veiculo{
 
 ```
 
- ### <h1>Questões</h1>
+ # Questões #
 
 A) Quais são os atributos (variáveis) da classe "Placa"?
 
