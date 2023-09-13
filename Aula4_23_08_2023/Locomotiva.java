@@ -8,16 +8,17 @@ public class Locomotiva extends CarroFerroviario {
         this.numeroMaximoVagoes = numeroMaximoVagoes;
     }
 
-    public int getCapacidadeCarga(){
-        return this.capacidadeCarga;
+    public int getCapacidadeCarga() {
+        return capacidadeCarga;
     }
 
     public int getNumeroMaximoVagoes() {
-        return this.numeroMaximoVagoes;
+        return numeroMaximoVagoes;
     }
 
     @Override
-    public String toString(){
-        return "Locomotiva: "+super.toString()+", capacidade de carga: "+this.capacidadeCarga+", max vagoes: "+this.getNumeroMaximoVagoes();
+    public String toString() {
+        return "Locomotiva: " + super.toString() + ", capacidade de carga: " + capacidadeCarga + ", max vagoes: "
+                + getNumeroMaximoVagoes();
     }
 }

@@ -1,7 +1,7 @@
-abstract class CarroFerroviario{
+abstract class CarroFerroviario {
     private int id;
     private Trem trem;
-    
+
     public CarroFerroviario(int id, Trem trem) {
         this.id = id;
         this.trem = trem;
@@ -21,21 +21,11 @@ abstract class CarroFerroviario{
     }
 
     @Override
-    public boolean equals(Object outro){
-        if (!(outro instanceof CarroFerroviario)){
+    public boolean equals(Object outro) {
+        if (!(outro instanceof CarroFerroviario)) {
             return false;
         }
-        CarroFerroviario cf = (CarroFerroviario)outro;
-        if (this.id == cf.getId()){
-            return true;
-        }
-        return false;
+        CarroFerroviario cf = (CarroFerroviario) outro;
+        return this.id == cf.getId();
     }
-    
-    /* 
-    @Override
-    public Object clone(){
-        return new CarroFerroviario(this.id, this.trem);
-    }
-    */
 }

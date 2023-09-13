@@ -1,4 +1,4 @@
-public class VagaoCarga extends Vagao{
+public class VagaoCarga extends Vagao {
     private int capacidadeCarga;
 
     public VagaoCarga(int id, Trem trem, int capacidadeCarga) {
@@ -12,6 +12,6 @@ public class VagaoCarga extends Vagao{
 
     @Override
     public String toString() {
-        return super.toString()+", capacidadeCarga=" + capacidadeCarga;
+        return super.toString() + ", capacidadeCarga=" + capacidadeCarga;
     }
 }
