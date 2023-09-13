@@ -39,7 +39,7 @@ markdown
     * Esta operação exige que se indique o identificador do trem e a primeira locomotiva. A primeira locomotiva nunca pode ser removida. Para liberar esta locomotiva é necessário desfazer o trem.
 
 2. Editar um trem:
- * Inicialmente deve-se indicar o identificador do trem a ser editado. A partir de então ficam liberadas as seguintes operações:
+Inicialmente deve-se indicar o identificador do trem a ser editado. A partir de então ficam liberadas as seguintes operações:
     1. Inserir uma locomotiva (informar identificador) respeitando restrições
 
     1. Inserir um vagão (informar identificador) respeitando restrições
