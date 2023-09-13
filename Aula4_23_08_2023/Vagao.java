@@ -1,4 +1,4 @@
-public class Vagao extends CarroFerroviario{
+public abstract class Vagao extends CarroFerroviario{
     public Vagao(int id,Trem trem){
         super(id,trem);
     }
