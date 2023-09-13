@@ -42,15 +42,15 @@ markdown
  * Inicialmente deve-se indicar o identificador do trem a ser editado. A partir de então ficam liberadas as seguintes operações:
     1. Inserir uma locomotiva (informar identificador) respeitando restrições
 
-    2. Inserir um vagão (informar identificador) respeitando restrições
+    1. Inserir um vagão (informar identificador) respeitando restrições
 
-    3. Remover o último elemento do trem
+    1. Remover o último elemento do trem
 
-    4. Listar locomotivas livres
+    1. Listar locomotivas livres
 
-    5. Listar vagões livres
+    1. Listar vagões livres
 
-    6. Encerrar a edição do trem
+    1. Encerrar a edição do trem
 
 3. Listar todas os trens já criados (todos os trens que estão no pátio)
 
