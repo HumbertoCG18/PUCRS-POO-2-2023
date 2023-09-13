@@ -66,3 +66,9 @@
 
 **5. Fim:**
   > Encerra o programa.
+
+
+
+### Tarefa 3 
+
+Refatorar o exercício da tarefa 2 (Este) agora explorando herança e polimorfismo. Criar uma hierarquia de classes para representar os elementos do trem (carros ferroviários). Criar uma garagem única para vagões e locomotivas e refazer a classe Trem de maneira a usar apenas uma única lista para armazenar tanto vagões como locomotivas. Considerar que os identificadores são únicos para qualquer tipo de carro ferroviário, isto é, não é permitido que um vagão tenha o mesmo id de uma locomotiva ou vice-versa.

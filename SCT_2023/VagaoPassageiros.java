@@ -1,3 +1,4 @@
+package SCT_2023;
 public class VagaoPassageiros extends Vagao {
     private int nroAssentos;
     private int numeroPassageiros;

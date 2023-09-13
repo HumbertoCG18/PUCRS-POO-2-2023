@@ -1,3 +1,4 @@
+package SCT_2023;
 public class VagaoCarga extends Vagao {
     private int capacidadeCarga;
 

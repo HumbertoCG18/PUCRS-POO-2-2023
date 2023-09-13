@@ -1,3 +1,4 @@
+package SCT_2023;
 public class App {
     public static void main(String[] args) throws Exception {
         GaragemCarroFerroviario garagem = new GaragemCarroFerroviario();
