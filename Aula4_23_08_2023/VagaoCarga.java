@@ -1,12 +1,17 @@
-public class VagaoCarga extends CarroFerroviario{
+public class VagaoCarga extends Vagao{
+    private int capacidadeCarga;
 
-    public VagaoCarga(int id,Trem trem,int capacidadeCarga){
-        super(id,trem,capacidadeCarga);
+    public VagaoCarga(int id, Trem trem, int capacidadeCarga) {
+        super(id, trem);
+        this.capacidadeCarga = capacidadeCarga;
+    }
+
+    public int getCapacidadeCarga() {
+        return capacidadeCarga;
     }
 
     @Override
-    public String toString(){
-        return "Vagao carga: "+super.toString();
+    public String toString() {
+        return super.toString()+", capacidadeCarga=" + capacidadeCarga;
     }
-    
 }

@@ -1,8 +1,8 @@
-public class VagaoPassageiros extends CarroFerroviario {
+public class VagaoPassageiros extends Vagao {
     private int nroAssentos;
 
-    public VagaoPassageiros(int id, Trem trem, int nroAssentos) {
-        super(id, trem, nroAssentos*120);
+    public VagaoPassageiros(int id, Trem trem,int nroAssentos) {
+        super(id, trem);
         this.nroAssentos = nroAssentos;
     }
 
@@ -12,7 +12,7 @@ public class VagaoPassageiros extends CarroFerroviario {
 
     @Override
     public String toString(){
-        return "Vagao passageiro: "+super.toString()+", nro de assentos: "+this.getNroAssentos();
+        return super.toString()+", nro de assentos: "+this.getNroAssentos();
     }
 
 }

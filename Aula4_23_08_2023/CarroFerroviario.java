@@ -1,12 +1,10 @@
 class CarroFerroviario{
     private int id;
     private Trem trem;
-    private int capacidadeCarga;
     
-    public CarroFerroviario(int id, Trem trem, int capacidadeCarga) {
+    public CarroFerroviario(int id, Trem trem) {
         this.id = id;
         this.trem = trem;
-        this.capacidadeCarga = capacidadeCarga;
     }
 
     public int getId() {
@@ -17,12 +15,8 @@ class CarroFerroviario{
         return trem;
     }
 
-    public int getCapacidadeCarga() {
-        return capacidadeCarga;
-    }
-
     @Override
     public String toString() {
-        return "id=" + id + ", trem=" + trem + ", capacidadeCarga=" + capacidadeCarga;
+        return "id=" + id + ", trem=" + trem;
     }
 }
