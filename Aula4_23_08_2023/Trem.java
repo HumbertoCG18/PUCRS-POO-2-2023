@@ -47,7 +47,7 @@ public class Trem {
 		return lstAux;
 	}
 
-	private int maxVagoesNaComposicao() {
+	/*private int maxVagoesNaComposicao() {
 		int qtdadeMaxVagoes = 0;
 		int qtdadeLocomotivas = 0;
 		for (CarroFerroviario cf : carros) {
@@ -59,8 +59,9 @@ public class Trem {
 		}
 		return (int) (qtdadeMaxVagoes * (1 - (0.1 * qtdadeLocomotivas)));
 	}
+	*/
 
-	private double pesoMaxNaComposicao() {
+	/*private double pesoMaxNaComposicao() {
 		int pesoMaximo = 0;
 		int qtdadeLocomotivas = 0;
 		for (CarroFerroviario cf : carros) {
@@ -72,8 +73,9 @@ public class Trem {
 		}
 		return (int) (pesoMaximo * (1 - (0.1 * qtdadeLocomotivas)));
 	}
+	*/
 
-	private double pesoAtualDaComposicao() {
+	/*private double pesoAtualDaComposicao() {
 		double peso = 0.0;
 		for (Vagao v : getTodosVagoes()) {
 			if (v instanceof VagaoCarga) {
@@ -85,6 +87,7 @@ public class Trem {
 		}
 		return peso;
 	}
+	*/
 
 	public boolean engataLocomotiva(Locomotiva locomotiva) {
 		return false;
