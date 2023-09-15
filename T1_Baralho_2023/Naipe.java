@@ -1,4 +1,4 @@
-package Aula2_14_08_2023;
+package T1_Baralho_2023;
 public enum Naipe {
     OUROS,ESPADAS,COPAS,PAUS;
 }

@@ -1,4 +1,4 @@
-package SCT_2023;
+package Aula4_04_09_2023;
 public class Locomotiva extends CarroFerroviario {
     private int capacidadeCarga;
     private int numeroMaximoVagoes;
