@@ -40,7 +40,7 @@
   <p>O sistema deve ter opções para: </p>
 
 **1. Criar um trem:**
-  > Esta operação exige que se indique o identificador do trem e a primeira locomotiva. A primeira locomotiva nunca pode ser removida. Para liberar esta locomotiva é necessário desfazer o trem.
+   Esta operação exige que se indique o identificador do trem e a primeira locomotiva. A primeira locomotiva nunca pode ser removida. Para liberar esta locomotiva é necessário desfazer o trem.
 
 **2. Editar um trem:**
 - Inicialmente deve-se indicar o identificador do trem a ser  editado. A partir de então ficam liberadas as seguintes operações:  
@@ -59,16 +59,11 @@
     6. Encerrar a edição do trem.
 
 **3. Listar:**
-  > Listar todas os trens já criados (todos os trens que estão no pátio).
+   Listar todas os trens já criados (todos os trens que estão no pátio).
 
 **4. Desfazer um trem:**
-  > Deve-se indicar o identificador do trem. A partir de então todos seus vagões e locomotivas devem ser liberados e o trem excluído da lista de trens.
+   Deve-se indicar o identificador do trem. A partir de então todos seus vagões e locomotivas devem ser liberados e o trem excluído da lista de trens.
 
 **5. Fim:**
-  > Encerra o programa.
+   Encerra o programa.
 
-
-
-### Tarefa 3 
-
-Refatorar o exercício da tarefa 2 (Este) agora explorando herança e polimorfismo. Criar uma hierarquia de classes para representar os elementos do trem (carros ferroviários). Criar uma garagem única para vagões e locomotivas e refazer a classe Trem de maneira a usar apenas uma única lista para armazenar tanto vagões como locomotivas. Considerar que os identificadores são únicos para qualquer tipo de carro ferroviário, isto é, não é permitido que um vagão tenha o mesmo id de uma locomotiva ou vice-versa.
