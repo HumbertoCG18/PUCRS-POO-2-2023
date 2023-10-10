@@ -1,4 +1,4 @@
-package T2_SCT_2023;
+package T3_SCT_2023;
 import java.util.ArrayList;
 
 public class GaragemCarroFerroviario {

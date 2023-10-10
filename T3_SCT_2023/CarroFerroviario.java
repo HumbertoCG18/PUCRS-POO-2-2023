@@ -1,4 +1,4 @@
-package T2_SCT_2023;
+package T3_SCT_2023;
 abstract class CarroFerroviario {
     private int id;
     private Trem trem;

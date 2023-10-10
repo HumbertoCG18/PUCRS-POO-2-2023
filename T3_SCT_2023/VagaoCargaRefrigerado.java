@@ -1,4 +1,4 @@
-package T2_SCT_2023;
+package T3_SCT_2023;
 public class VagaoCargaRefrigerado extends VagaoCarga {
     private int temperaturaMinima;
     private int cargaRefrigerada;
