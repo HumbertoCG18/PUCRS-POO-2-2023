@@ -1,10 +1,11 @@
+package Aula6_10_11_2023.BaseLambdas;
 /*
-1)	Exercícios sobre funcoes lambda
-a.	Implementar o método void foreach(Consumer<Funcionario) e usar ele para imprimir a lista de funcionarios
-b.	Retornar a quantidade de funcionários que atendem uma condição.
-c.	Retornar o somatório de um valor de todos os funcionários que atendam uma condição.
-d.	Aplicar uma atualização em todos os funcionários que atendam uma condição.
-e.	Retornar uma lista com os dados que interessem de todos os funcionários que atendem uma condição.
+! 1)	Exercícios sobre funcoes lambda
+ToDo: a.	Implementar o método void foreach(Consumer<Funcionario) e usar ele para imprimir a lista de funcionarios
+ToDo: b.	Retornar a quantidade de funcionários que atendem uma condição.
+ToDo: c.	Retornar o somatório de um valor de todos os funcionários que atendam uma condição.
+ToDo: d.	Aplicar uma atualização em todos os funcionários que atendam uma condição.
+ToDo: e.	Retornar uma lista com os dados que interessem de todos os funcionários que atendem uma condição.
 */
 public class App {
   public static void main(String args[]) {

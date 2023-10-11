@@ -1,3 +1,5 @@
+package Aula6_10_11_2023.BaseLambdas;
+
 public class Funcionario {
 	private int matricula;
 	private String nome;
