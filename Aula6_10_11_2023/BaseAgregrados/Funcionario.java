@@ -1,3 +1,4 @@
+package Aula6_10_11_2023.BaseAgregrados;
 public class Funcionario {
 	private int matricula;
 	private String nome;
