@@ -2,8 +2,32 @@ package T4_2023;
 
 public class Aluno {
     private int matricula;
+    public int getMatricula() {
+        return matricula;
+    }
+
+    public void setMatricula(int matricula) {
+        this.matricula = matricula;
+    }
+
     private String nome;
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
     private int anoNascimento;
+
+    public int getAnoNascimento() {
+        return anoNascimento;
+    }
+
+    public void setAnoNascimento(int anoNascimento) {
+        this.anoNascimento = anoNascimento;
+    }
 
     public Aluno(int umaMatricula, String umNome, int umAnoNascimento) throws IllegalArgumentException {
         if (umaMatricula <= 0) {
