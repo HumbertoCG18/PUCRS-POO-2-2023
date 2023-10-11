@@ -1,11 +1,13 @@
 package Aula6_10_11_2023.BaseLambdas;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.ToDoubleFunction;
+import java.util.stream.Collectors;
 
 public class CadastroFuncionarios {
 	public static final int TAM = 5;
@@ -29,38 +31,33 @@ public class CadastroFuncionarios {
 		lstf.add(new Funcionario(180,"Zezinho Especial",5000,3,false));
 	}
 
-	// 1a: aplicar uma operação sobre todos os Funcionarios da lista
-	public void forEach(Consumer<Funcionario> oper) {
-		for(Funcionario func:lstf){
-			oper.accept(func);
-		}
-	}
+    // 1a: Aplicar uma operação sobre todos os Funcionários da lista
+    public void forEach(Consumer<Funcionario> operacao) {
+        lstf.forEach(operacao);
+    }
 
-	// 1b
-	public long quantidadeFuncionariosCondicao(Predicate<Funcionario> condicao){
-		long cont = 0L;
-		for(Funcionario func:lstf){
-			if (condicao.test(func)){
-				cont++;
-			}
-		}
-		return cont;
-	}
+    // 1b: Retornar a quantidade de funcionários que atendem uma condição
+    public long quantidadeFuncionariosCondicao(Predicate<Funcionario> condicao) {
+        return lstf.stream().filter(condicao).count();
+    }
 
-	//1c
-	public double somatorioCondicao(/* ??? */){
-		return 0.0;
-	}
+    // 1c: Retornar o somatório de um valor de todos os funcionários que atendam uma condição
+    public double somatorioCondicao(Predicate<Funcionario> condicao, ToDoubleFunction<Funcionario> extrator) {
+        return lstf.stream().filter(condicao).mapToDouble(extrator).sum();
+    }
 
-	//1d
-	public void alteraCondicao(/* ??? */){
+    // 1d: Aplicar uma atualização em todos os funcionários que atendam uma condição
+    public void alteraCondicao(Predicate<Funcionario> condicao, Consumer<Funcionario> operacao) {
+        lstf.stream().filter(condicao).forEach(operacao);
+    }
 
-	}
-
-	//1e
-	public List<String> getCamposCondicao(/* ??? */){
-		return new LinkedList<>();
-	}
+    // 1e: Retornar uma lista com os dados que interessem de todos os funcionários que atendem uma condição
+    public List<String> getCamposCondicao(Predicate<Funcionario> condicao, Function<Funcionario, String> extrator) {
+        return lstf.stream()
+            .filter(condicao)
+            .map(extrator)
+            .collect(Collectors.toList());
+    }
 
 	@Override
 	public String toString() {

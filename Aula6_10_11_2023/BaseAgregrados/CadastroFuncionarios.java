@@ -27,49 +27,101 @@ public class CadastroFuncionarios {
 		lstf.add(new Funcionario(180,"Zezinho Especial",5000,3,false));
 	}
 
-	public List<Funcionario> getFuncionarios() {
-		// Retorna um clone da lista
-		return new LinkedList<Funcionario>(lstf);
-	}
+    public List<Funcionario> getFuncionarios() {
+        return new ArrayList<>(lstf);
+    }
 
-	// 1a
-	public List<Funcionario> getInsalubridadeDependentes(){
-		return new ArrayList<Funcionario>();
-	}
+    // 1a
+    public List<Funcionario> getInsalubridadeDependentes() {
+        List<Funcionario> result = new ArrayList<>();
+        for (Funcionario f : lstf) {
+            if (f.getInsalubridade() && f.getNroDependentes() > 0) {
+                result.add(f);
+            }
+        }
+        return result;
+    }
 
-	// 1b
-	public long quantidadeFuncionariosComDependentes(){
-		return 0;
-	}
+    // 1b
+    public long quantidadeFuncionariosComDependentes() {
+        long count = 0;
+        for (Funcionario f : lstf) {
+            if (f.getNroDependentes() > 0) {
+                count++;
+            }
+        }
+        return count;
+    }
 
-	//1c
-	public double somatorioSalarioBruto(){
-		return 0;
-	}
+    // 1c
+    public double somatorioSalarioBruto() {
+        double soma = 0;
+        for (Funcionario f : lstf) {
+            if (f.getSalarioBase() > 5000) {
+                soma += f.getSalarioBruto();
+            }
+        }
+        return soma;
+    }
 
-	//1d
-	public void aumentaSalarioInsalubres(){
-	}
+    // 1d
+    public void aumentaSalarioInsalubres() {
+        for (Funcionario f : lstf) {
+            if (f.getInsalubridade()) {
+                f.aumentaSalBase(1.2); // Aumento de 20%
+            }
+        }
+    }
 
-	//1e
-	public List<String> getNomeMatriculaSalarioBrutoMaiorQueBase(){
-		return new ArrayList<String>();
-	}
+    // 1e
+    public List<String> getNomeMatriculaSalarioBrutoMaiorQueBase() {
+        List<String> result = new ArrayList<>();
+        for (Funcionario f : lstf) {
+            if (f.getSalarioBruto() > 1.1 * f.getSalarioBase()) {
+                result.add(f.getNome() + " - Matrícula: " + f.getMatricula());
+            }
+        }
+        return result;
+    }
 
-	//1f
-	public double mediaSalarialDosQueNaoTemInsalubridade(){
-		return 0;
-	}
+    // 1f
+    public double mediaSalarialDosQueNaoTemInsalubridade() {
+        double soma = 0;
+        int count = 0;
+        for (Funcionario f : lstf) {
+            if (!f.getInsalubridade()) {
+                soma += f.getSalarioBase();
+                count++;
+            }
+        }
+        if (count > 0) {
+            return soma / count;
+        } else {
+            return 0;
+        }
+    }
 
-	//1g
-	public List<String> nomesDosQueTemMatriculaMenorQue500(){
-		return new ArrayList<String>();
-	}
+    // 1g
+    public List<String> nomesDosQueTemMatriculaMenorQue500() {
+        List<String> result = new ArrayList<>();
+        for (Funcionario f : lstf) {
+            if (f.getMatricula() < 500) {
+                String[] partesNome = f.getNome().split(" ");
+                result.add(partesNome[0]);
+            }
+        }
+        return result;
+    }
 
-	//1h
-	public double getSalarioLiquido(int matricula){
-		return 0;
-	}
+    // 1h
+    public double getSalarioLiquido(int matricula) {
+        for (Funcionario f : lstf) {
+            if (f.getMatricula() == matricula) {
+                return f.getSalarioLiquido();
+            }
+        }
+        return -1;
+    }
 	
 	@Override
 	public String toString() {
