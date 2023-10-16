@@ -3,7 +3,8 @@ package T4_2023;
 public class ExemploContaCorrente {
     public static void main(String[] args) {
         try {
-            ContaCorrente conta = new ContaCorrente(-100); 
+            ContaCorrente Conta;
+            Conta = new ContaCorrente(-100); 
         } catch (SaldoInsuficienteException e) {
             System.out.println(e.getMessage());
         }

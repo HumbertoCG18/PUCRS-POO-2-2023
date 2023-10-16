@@ -17,10 +17,13 @@ public class MinhaLista<T> implements Iterable<T> {
     class Iterador<I> implements Iterator<I>{
         private Nodo<I> cursor;
 
+
+        /* 
         public Iterador(){
             cursor = (MinhaLista<T>.Nodo<I>) prim;
         }
-
+        */
+        
         @Override
         public boolean hasNext() {
             return cursor != null;
