@@ -1,3 +1,4 @@
+
 /*
  * Roteiro:
  * - Criar interface criterioPesquisa
@@ -8,10 +9,7 @@
  * - Mostrar com Predicate
  */
 
-import java.nio.charset.CodingErrorAction;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 public class App {
     public static void main(String args[]){
@@ -34,8 +32,6 @@ public class App {
         */
 
         Condicao<Locomotiva> c1 = l->l.getComposicao() == -1;
-        Condicao<Locomotiva> c2 = l->(l.getComposicao() == -1 && l.getQtdadeMaxVagoes() < 20);
-        
         Collection<Locomotiva> resp = cad.getLocomotivas(c1);
 
         /* 
