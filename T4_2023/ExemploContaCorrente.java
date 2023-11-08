@@ -2,12 +2,12 @@ package T4_2023;
 
 public class ExemploContaCorrente {
     public static void main(String[] args) {
-        try {
+        /*try {
             ContaCorrente Conta;
             Conta = new ContaCorrente(-100); 
         } catch (SaldoInsuficienteException e) {
             System.out.println(e.getMessage());
-        }
+        }*/
 
         ContaCorrente conta = null;
         try {

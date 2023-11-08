@@ -1,9 +1,8 @@
 package T4_2023;
-
+/*
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-
 public class ExemploExcecoesJava {
     public static void main(String[] args) {
         // Exceção de índice de arranjo
@@ -43,5 +42,4 @@ public class ExemploExcecoesJava {
             System.out.println("Arquivo não encontrado");
         }
     }
-}
-
+} */
