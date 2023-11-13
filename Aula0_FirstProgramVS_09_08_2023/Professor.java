@@ -1,4 +1,4 @@
-package Aula1_FirstProgramVS_09_08_2023;
+package Aula0_FirstProgramVS_09_08_2023;
 
 public class Professor {
     private String nome;    

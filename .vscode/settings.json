@@ -1,3 +1,10 @@
 {
-    "java.debug.settings.onBuildFailureProceed": true
+    "java.debug.settings.onBuildFailureProceed": true,
+    "java.project.sourcePaths": [
+        "TF_2023",
+        "Aula8_23_10_2023",
+        "Aula7_18_10_2023/Alterado",
+        "Aula3_E_Extra_16_08_2023",
+        ""
+    ]
 }

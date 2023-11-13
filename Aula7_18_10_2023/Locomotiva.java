@@ -1,3 +1,4 @@
+package Aula7_18_10_2023;
 public class Locomotiva {
 	private int identificador;
 	private double pesoMaximo;
