@@ -11,7 +11,7 @@
 
 import java.util.Collection;
 
-public class App {
+public class AppA {
     public static void main(String args[]){
         CadastroLocomotivas cad = new CadastroLocomotivas();
         cad.carrega();
