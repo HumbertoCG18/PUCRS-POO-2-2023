@@ -1,16 +1,16 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.File;
 
 public class LoginForm extends JFrame {
     private JTextField usuarioField;
     private JPasswordField senhaField;
     private JButton loginButton;
-    private JButton cadastrarClienteButton;  // Botão para ir para o cadastro de clientes
+    private JButton cadastrarClienteButton;
+    private JButton cadastrarEmpresaButton;
 
     public LoginForm() {
         setTitle("Login");
@@ -20,7 +20,7 @@ public class LoginForm extends JFrame {
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(4, 2));
 
-        panel.add(new JLabel("Usuário:"));
+        panel.add(new JLabel("Usuario:"));
         usuarioField = new JTextField();
         panel.add(usuarioField);
 
@@ -29,30 +29,24 @@ public class LoginForm extends JFrame {
         panel.add(senhaField);
 
         loginButton = new JButton("Login");
-        loginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                realizarLogin();
-            }
-        });
+        loginButton.addActionListener(e -> realizarLogin());
         panel.add(loginButton);
 
         cadastrarClienteButton = new JButton("Cadastrar Cliente");
-        cadastrarClienteButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                abrirCadastroCliente();
-            }
-        });
+        cadastrarClienteButton.addActionListener(e -> abrirCadastroCliente());
         panel.add(cadastrarClienteButton);
+
+        cadastrarEmpresaButton = new JButton("Cadastrar Empresa");
+        cadastrarEmpresaButton.addActionListener(e -> abrirCadastroEmpresa());
+        panel.add(cadastrarEmpresaButton);
 
         add(panel);
     }
 
     private boolean autenticarUsuario(String usuario, char[] senha, String tipoUsuario) {
-        String caminhoArquivo = tipoUsuario.equals("empresa") ? "Empresa.txt" : "Cliente.txt";
+        File caminhoArquivo = tipoUsuario.equals("empresa") ? new File("./TF_2023/Empresa.txt") : new File("./TF_2023/Cliente.txt");
 
-        if (!usuario.isEmpty() && verificarSenha(usuario, senha, caminhoArquivo)) {
+        if (caminhoArquivo.exists() && !usuario.isEmpty() && verificarSenha(usuario, senha, caminhoArquivo)) {
             return true;
         } else {
             JOptionPane.showMessageDialog(this, "Login inválido. Verifique usuário e senha.");
@@ -60,51 +54,29 @@ public class LoginForm extends JFrame {
         }
     }
 
-    private boolean verificarSenha(String email, char[] senha, String caminhoArquivo) {
+    private boolean verificarSenha(String email, char[] senha, File caminhoArquivo) {
         String senhaDigitada = new String(senha);
-        String senhaArmazenada = obterSenhaArmazenada(email, caminhoArquivo);
-        return senhaDigitada.equals(senhaArmazenada);
-    }
-
-    private String obterSenhaArmazenada(String email, String caminhoArquivo) {
         try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
             String linha;
             while ((linha = br.readLine()) != null) {
                 String[] partes = linha.split(";");
-                if (partes.length >= 2 && partes[0].equalsIgnoreCase(email)) {
-                    return partes[1];  // A senha está na segunda posição (0-indexed)
+                if (partes.length >= 3 && partes[2].equalsIgnoreCase(email) && partes[3].equals(senhaDigitada)) {
+                    return true;
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return "";  // Email não encontrado ou erro na leitura do arquivo
+        return false;  // Email ou senha não encontrados ou erro na leitura do arquivo
     }
-
-private void abrirJanelaPrincipal(String usuario, String tipoUsuario) {
-    if (tipoUsuario.equalsIgnoreCase("cliente")) {
-        SwingUtilities.invokeLater(() -> {
-            // Implemente a janela do cliente
-            ClienteWindow clienteWindow = new ClienteWindow(usuario);
-            clienteWindow.setVisible(true);
-        });
-    } else if (tipoUsuario.equalsIgnoreCase("empresa")) {
-        SwingUtilities.invokeLater(() -> {
-            // Implemente a janela da empresa
-            EmpresaWindow empresaWindow = new EmpresaWindow(usuario);
-            empresaWindow.setVisible(true);
-        });
-    } else {
-        JOptionPane.showMessageDialog(this, "Tipo de usuário desconhecido.");
-    }
-}
 
     private void abrirCadastroCliente() {
-        SwingUtilities.invokeLater(() -> {
-            // Abre a janela de cadastro de cliente
-            new CadastroClienteGUI().setVisible(true);
-        });
+        SwingUtilities.invokeLater(() -> new CadastroClienteGUI().setVisible(true));
+    }
+
+    private void abrirCadastroEmpresa() {
+        SwingUtilities.invokeLater(() -> new CadastroEmpresaGUI().setVisible(true));
     }
 
     private void realizarLogin() {
@@ -116,18 +88,15 @@ private void abrirJanelaPrincipal(String usuario, String tipoUsuario) {
 
         if (tipoUsuario != null && autenticarUsuario(email, senha, tipoUsuario)) {
             abrirJanelaPrincipal(email, tipoUsuario);
+        } else {
+            usuarioField.setText("");
+            senhaField.setText("");
         }
-
-        usuarioField.setText("");
-        senhaField.setText("");
     }
 
     private String getEmailTipoUsuario(String email) {
-        // Implemente a lógica para determinar se é um cliente ou uma empresa
-        // Você pode fazer isso verificando se o email está presente no arquivo "Cliente.txt" ou "Empresa.txt"
-
-        String caminhoCliente = "Cliente.txt";
-        String caminhoEmpresa = "Empresa.txt";
+        File caminhoCliente = new File("./TF_2023/Cliente.txt");
+        File caminhoEmpresa = new File("./TF_2023/Empresa.txt");
 
         if (existeEmailNoArquivo(email, caminhoCliente)) {
             return "cliente";
@@ -135,15 +104,15 @@ private void abrirJanelaPrincipal(String usuario, String tipoUsuario) {
             return "empresa";
         }
 
-        return null;  // Email não encontrado em nenhum arquivo
+        return null;
     }
 
-    private boolean existeEmailNoArquivo(String email, String caminhoArquivo) {
+    private boolean existeEmailNoArquivo(String email, File caminhoArquivo) {
         try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
             String linha;
             while ((linha = br.readLine()) != null) {
                 String[] partes = linha.split(";");
-                if (partes.length >= 1 && partes[0].equalsIgnoreCase(email)) {
+                if (partes.length >= 3 && partes[2].equalsIgnoreCase(email)) {
                     return true;
                 }
             }
@@ -151,12 +120,28 @@ private void abrirJanelaPrincipal(String usuario, String tipoUsuario) {
             e.printStackTrace();
         }
 
-        return false;  // Email não encontrado ou erro na leitura do arquivo
+        return false;
+    }
+
+    private void abrirJanelaPrincipal(String usuario, String tipoUsuario) {
+        if (tipoUsuario.equalsIgnoreCase("cliente")) {
+            SwingUtilities.invokeLater(() -> {
+                ClienteWindow clienteWindow = new ClienteWindow(usuario);
+                clienteWindow.setVisible(true);
+                dispose(); // Fechar a tela de login
+            });
+        } else if (tipoUsuario.equalsIgnoreCase("empresa")) {
+            SwingUtilities.invokeLater(() -> {
+                EmpresaWindow empresaWindow = new EmpresaWindow(usuario);
+                empresaWindow.setVisible(true);
+                dispose(); // Fechar a tela de login
+            });
+        } else {
+            JOptionPane.showMessageDialog(this, "Tipo de usuário desconhecido.");
+        }
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new LoginForm().setVisible(true);
-        });
+        SwingUtilities.invokeLater(() -> new LoginForm().setVisible(true));
     }
 }

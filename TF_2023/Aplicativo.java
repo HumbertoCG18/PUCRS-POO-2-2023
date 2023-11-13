@@ -72,6 +72,6 @@ public class Aplicativo {
         aplicativos.add(new Aplicativo(2, "App2", "iOS", 12.99));
         aplicativos.add(new Aplicativo(3, "App3", "Windows", 8.99));
 
-        salvarAplicativosEmArquivo(aplicativos, "Aplicativos.txt");
+        salvarAplicativosEmArquivo(aplicativos, "./TF_2023/Aplicativos.txt");
     }
 }

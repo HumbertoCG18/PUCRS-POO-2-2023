@@ -17,6 +17,7 @@ public class Professor {
         return anosExperiencia;
     }
 
+    /* 
     public String classifica(){
         // Nova sintaxe do Java 14-15 em diante
         return switch(anosExperiencia){
@@ -24,10 +25,14 @@ public class Professor {
             case 6,7,8,9,10 -> "Adjunto";
             default -> "Titular";
         };
-    }
+    }*/
 
     @Override
     public String toString() {
         return "Professor: " + nome + ", anos de experiencia:" + anosExperiencia;
+    }
+
+    public String classifica() {
+        return null;
     }
 }

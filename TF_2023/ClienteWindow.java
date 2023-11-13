@@ -33,7 +33,7 @@ public class ClienteWindow extends JFrame {
 
     private void carregarInformacoesCliente() {
         // Lógica para carregar as informações do cliente a partir do arquivo "Clientes.txt"
-        String caminhoArquivo = "Clientes.txt";
+        String caminhoArquivo = "./TF_2023/Cliente.txt";
 
         try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
             String linha;

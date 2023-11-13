@@ -75,7 +75,7 @@ public class Assinatura {
         }
     }
         private Aplicativo obterAplicativo() {
-        String caminhoArquivo = "Aplicativos.txt";
+        String caminhoArquivo = "./TF_2023/Aplicativos.txt";
 
         try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
             String linha;
@@ -102,7 +102,7 @@ public class Assinatura {
 
         // Se o cálculo da cobrança mensal for bem-sucedido
         if (cobrancaMensal != -1) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter("Assinaturas.txt", true))) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter("./TF_2023/Assinaturas.txt", true))) {
                 // Adiciona uma linha ao arquivo contendo os dados da assinatura e a cobrança mensal
                 writer.write(String.format("%d;%d;%s;%s;%s;%.2f%n", codigo, codigoAplicativo, cpfCliente, inicioVigencia, fimVigencia, cobrancaMensal));
                 JOptionPane.showMessageDialog(null, "Assinatura cadastrada com sucesso! Cobrança mensal: R$" + cobrancaMensal);

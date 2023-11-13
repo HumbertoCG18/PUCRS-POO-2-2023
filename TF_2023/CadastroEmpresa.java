@@ -5,7 +5,7 @@ import java.io.IOException;
 public class CadastroEmpresa {
 
     public static void cadastrarEmpresa(String email, String senha, String nome, String cnpj) {
-        String caminhoArquivo = "Empresa.txt";
+        String caminhoArquivo = "./TF_2023/Empresa.txt";
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminhoArquivo, true))) {
             // Adiciona uma nova linha ao arquivo com os dados da empresa

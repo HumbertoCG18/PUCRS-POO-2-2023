@@ -33,7 +33,7 @@ public class EmpresaWindow extends JFrame {
 
     private void carregarInformacoesEmpresa() {
         // Lógica para carregar as informações da empresa a partir do arquivo "Empresa.txt"
-        String caminhoArquivo = "Empresa.txt";
+        String caminhoArquivo = "./TF_2023/Empresa.txt";
 
         try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
             String linha;
