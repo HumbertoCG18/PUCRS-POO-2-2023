@@ -1,3 +1,5 @@
+package Aula7_18_10_2023;
+
 /*
  * Roteiro:
  * - Criar interface criterioPesquisa
