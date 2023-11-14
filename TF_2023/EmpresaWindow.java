@@ -113,8 +113,6 @@ public class EmpresaWindow extends JFrame {
     private void carregarInformacoesEmpresa() {
         // Obter o diretório atual
         String diretorioAtual = System.getProperty("user.dir");
-
-        // Carregar informações da empresa a partir do arquivo "Empresa.txt"
         File caminhoArquivoEmpresa = new File(diretorioAtual + "/Empresa.txt");
 
         try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivoEmpresa))) {
@@ -171,28 +169,28 @@ public class EmpresaWindow extends JFrame {
 
     private List<Aplicativo> carregarAplicativos(String caminhoArquivo) {
         List<Aplicativo> aplicativos = new ArrayList<>();
-
+    
         try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
             String linha;
             while ((linha = br.readLine()) != null) {
                 String[] partes = linha.split(";");
                 if (partes.length >= 4) {
-                    Aplicativo aplicativo = new Aplicativo(
-                            Integer.parseInt(partes[0].trim()),
-                            partes[1].trim(),
-                            partes[2].trim(),
-                            Double.parseDouble(partes[3].trim())
-                    );
-                    aplicativos.add(aplicativo);
+                    int codigo = Integer.parseInt(partes[0].trim());
+                    String nome = partes[1].trim();
+                    String sistemaOperacional = partes[2].trim();
+                    double valorMensal = Double.parseDouble(partes[3].trim());
+    
+                    Aplicativo app = new Aplicativo(codigo, nome, sistemaOperacional, valorMensal);
+                    aplicativos.add(app);
                 }
             }
         } catch (IOException | NumberFormatException e) {
             e.printStackTrace();
         }
-
+    
         return aplicativos;
     }
-
+    
     private List<Assinatura> carregarAssinaturas(String caminhoArquivo) {
         List<Assinatura> assinaturas = new ArrayList<>();
 

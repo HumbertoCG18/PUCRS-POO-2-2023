@@ -13,7 +13,7 @@ public class Assinatura {
     private String cpfCliente;
     private String inicioVigencia;
     private String fimVigencia;
-    private double valorMensal;
+    public double valorMensal;
 
     public Assinatura(int codigo, int codigoAplicativo, String cpfCliente, String inicioVigencia, String fimVigencia, double valorMensal) {
         this.codigo = codigo;
@@ -30,6 +30,9 @@ public class Assinatura {
 
     public void setCodigo(int codigo) {
         this.codigo = codigo;
+    }
+    public double getValorMensal() {
+        return calcularCobrancaMensal();
     }
 
     public int getCodigoAplicativo() {
@@ -64,21 +67,46 @@ public class Assinatura {
         this.fimVigencia = fimVigencia;
     }
 
+    //Aplicativo aplicativo = obterAplicativo();
+
     public double calcularCobrancaMensal() {
-        // Lógica para obter os dados do aplicativo associado
+        double valorMensalArquivo = obterValorMensalDoArquivo(codigoAplicativo);
         Aplicativo aplicativo = obterAplicativo();
-
-        // Se o aplicativo for encontrado, calcula a cobrança mensal
         if (aplicativo != null) {
-            return aplicativo.getValorMensal();
-        } else {
-            // Retorna -1 como sinal de que o aplicativo associado não foi encontrado
-            return -1;
+            double valorMensal = obterValorMensalDoArquivo(aplicativo.getCodigo());
+            if (valorMensal != -1) {
+                this.valorMensal = valorMensalArquivo; // Atualiza o valorMensal na instância de Assinatura
+                return valorMensalArquivo;
+            }
         }
+        // Retorna -1 como sinal de que o aplicativo associado não foi encontrado ou o valor mensal não está disponível
+        return -1;
     }
-        private Aplicativo obterAplicativo() {
+    
+    private double obterValorMensalDoArquivo(int codigoAplicativo) {
         String caminhoArquivo = "./TF_2023/Aplicativos.txt";
-
+    
+        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
+            String linha;
+            while ((linha = br.readLine()) != null) {
+                String[] partes = linha.split(";");
+                int codigoAplicativoArquivo = Integer.parseInt(partes[0].trim());
+                if (codigoAplicativoArquivo == codigoAplicativo) {
+                    // Encontrou o aplicativo correspondente
+                    return Double.parseDouble(partes[3].trim()); // Retorna o valor mensal
+                }
+            }
+        } catch (IOException | NumberFormatException ex) {
+            ex.printStackTrace();
+        }
+    
+        // Retorna -1 se o aplicativo não for encontrado
+        return -1;
+    }
+    
+    private Aplicativo obterAplicativo() {
+        String caminhoArquivo = "./TF_2023/Aplicativos.txt";
+    
         try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
             String linha;
             while ((linha = br.readLine()) != null) {
@@ -92,12 +120,11 @@ public class Assinatura {
         } catch (IOException | NumberFormatException ex) {
             ex.printStackTrace();
         }
-
+    
         // Retorna null se o aplicativo não for encontrado
         return null;
     }
 
-    
 
     public void salvarAssinatura() {
         double cobrancaMensal = calcularCobrancaMensal();
