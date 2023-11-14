@@ -48,9 +48,7 @@ public class LoginForm extends JFrame {
 
     private boolean autenticarUsuario(String usuario, char[] senha, String tipoUsuario) {
         String diretorioAtual = System.getProperty("user.dir");
-        File caminhoArquivo = tipoUsuario.equals("empresa") ?
-                new File(diretorioAtual + "/Empresa.txt") :
-                new File(diretorioAtual + "/Cliente.txt");
+        File caminhoArquivo = tipoUsuario.equals("empresa") ? new File(diretorioAtual + "/Empresa.txt") :new File(diretorioAtual + "/Cliente.txt");
     
         if (caminhoArquivo.exists() && !usuario.isEmpty() && verificarSenha(usuario, senha, caminhoArquivo)) {
             return true;

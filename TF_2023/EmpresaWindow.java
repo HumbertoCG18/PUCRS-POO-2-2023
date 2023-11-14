@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -110,14 +111,17 @@ public class EmpresaWindow extends JFrame {
     }
 
     private void carregarInformacoesEmpresa() {
-        // Implemente a lógica para carregar as informações da empresa a partir do arquivo "Empresa.txt"
-        String caminhoArquivoEmpresa = "./TF_2023/Empresa.txt";
-    
+        // Obter o diretório atual
+        String diretorioAtual = System.getProperty("user.dir");
+
+        // Carregar informações da empresa a partir do arquivo "Empresa.txt"
+        File caminhoArquivoEmpresa = new File(diretorioAtual + "/Empresa.txt");
+
         try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivoEmpresa))) {
             String linha;
             while ((linha = br.readLine()) != null) {
                 String[] partes = linha.split(";");
-                if (partes.length >= 4 && partes[0].equalsIgnoreCase(email)) {
+                if (partes.length >= 5 && partes[0].equalsIgnoreCase(email)) {
                     cnpj = partes[3].trim();
                     nome = partes[2].trim();
                     break;  // Encontrou a empresa, pode sair do loop
@@ -127,22 +131,22 @@ public class EmpresaWindow extends JFrame {
             e.printStackTrace();
         }
 
-        // Se não encontrou a empresa, atribua valores padrão ou lide com a situação conforme necessário
-        if (cnpj == null) {
+        // Se não encontrou a empresa, atribuir valores padrão
+        if (cnpj == null || nome == null) {
             cnpj = "CNPJ não encontrado";
             nome = "Nome não encontrado";
         }
 
         // Carregar informações dos clientes
-        String caminhoArquivoCliente = "./TF_2023/Cliente.txt";
+        String caminhoArquivoCliente = diretorioAtual + "/Cliente.txt";
         listaClientes = carregarClientes(caminhoArquivoCliente);
 
         // Carregar informações dos aplicativos
-        String caminhoArquivoAplicativo = "./TF_2023/Aplicativos.txt";
+        String caminhoArquivoAplicativo = diretorioAtual + "/Aplicativos.txt";
         listaAplicativos = carregarAplicativos(caminhoArquivoAplicativo);
 
         // Carregar informações das assinaturas
-        String caminhoArquivoAssinatura = "./TF_2023/Assinaturas.txt";
+        String caminhoArquivoAssinatura = diretorioAtual + "/Assinaturas.txt";
         listaAssinaturas = carregarAssinaturas(caminhoArquivoAssinatura);
     }
 
