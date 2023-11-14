@@ -49,8 +49,8 @@ public class Aplicativo {
         this.valorMensal = valorMensal;
     }
 
-    public static void salvarAplicativosEmArquivo(List<Aplicativo> aplicativos, String nomeArquivo) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(nomeArquivo))) {
+    public static void salvarAplicativosEmArquivo(List<Aplicativo> aplicativos, String caminhoArquivoAplicativo) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminhoArquivoAplicativo))) {
             for (Aplicativo aplicativo : aplicativos) {
                 writer.write(String.format("%d;%s;%s;%.2f%n",
                         aplicativo.getCodigo(),
@@ -72,6 +72,6 @@ public class Aplicativo {
         aplicativos.add(new Aplicativo(2, "App2", "iOS", 12.99));
         aplicativos.add(new Aplicativo(3, "App3", "Windows", 8.99));
 
-        salvarAplicativosEmArquivo(aplicativos, "./TF_2023/Aplicativos.txt");
+        salvarAplicativosEmArquivo(aplicativos, "/Aplicativos.txt");
     }
 }
