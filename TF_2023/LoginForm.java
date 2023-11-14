@@ -1,9 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginForm extends JFrame {
     private JTextField usuarioField;
@@ -131,8 +133,13 @@ public class LoginForm extends JFrame {
                 dispose(); // Fechar a tela de login
             });
         } else if (tipoUsuario.equalsIgnoreCase("empresa")) {
+            // Se você tiver uma lista de clientes, aplicativos e assinaturas para passar para a EmpresaWindow
+            List<Cliente> listaClientes = new ArrayList<>();
+            List<Aplicativo> listaAplicativos = new ArrayList<>();
+            List<Assinatura> listaAssinaturas = new ArrayList<>();
+
             SwingUtilities.invokeLater(() -> {
-                EmpresaWindow empresaWindow = new EmpresaWindow(usuario);
+                EmpresaWindow empresaWindow = new EmpresaWindow(usuario, listaClientes, listaAplicativos, listaAssinaturas);
                 empresaWindow.setVisible(true);
                 dispose(); // Fechar a tela de login
             });

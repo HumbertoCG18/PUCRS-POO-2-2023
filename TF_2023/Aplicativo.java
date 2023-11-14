@@ -68,9 +68,9 @@ public class Aplicativo {
         // Exemplo de como criar e escrever aplicativos em um arquivo
         List<Aplicativo> aplicativos = new ArrayList<>();
 
-        aplicativos.add(new Aplicativo(1, "App1", "Android", 9.99));
-        aplicativos.add(new Aplicativo(2, "App2", "iOS", 12.99));
-        aplicativos.add(new Aplicativo(3, "App3", "Windows", 8.99));
+        aplicativos.add(new Aplicativo(1, "App1", "Android", 10));
+        aplicativos.add(new Aplicativo(2, "App2", "iOS", 13));
+        aplicativos.add(new Aplicativo(3, "App3", "Windows", 9));
 
         salvarAplicativosEmArquivo(aplicativos, "./TF_2023/Aplicativos.txt");
     }

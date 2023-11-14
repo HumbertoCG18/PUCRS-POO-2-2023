@@ -13,13 +13,15 @@ public class Assinatura {
     private String cpfCliente;
     private String inicioVigencia;
     private String fimVigencia;
+    private double valorMensal;
 
-    public Assinatura(int codigo, int codigoAplicativo, String cpfCliente, String inicioVigencia, String fimVigencia) {
+    public Assinatura(int codigo, int codigoAplicativo, String cpfCliente, String inicioVigencia, String fimVigencia, double valorMensal) {
         this.codigo = codigo;
         this.codigoAplicativo = codigoAplicativo;
         this.cpfCliente = cpfCliente;
         this.inicioVigencia = inicioVigencia;
         this.fimVigencia = fimVigencia;
+        this.valorMensal = valorMensal;
     }
 
     public int getCodigo() {
