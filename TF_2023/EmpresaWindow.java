@@ -22,6 +22,8 @@ public class EmpresaWindow extends JFrame {
         this.listaAplicativos = listaAplicativos;
         this.listaAssinaturas = listaAssinaturas;
         carregarInformacoesEmpresa(); // Carregar informações da empresa ao criar a janela
+        
+        
 
         setTitle("Janela da Empresa/Desenvolvedor");
         setSize(800, 600);
@@ -148,10 +150,10 @@ public class EmpresaWindow extends JFrame {
         listaAssinaturas = carregarAssinaturas(caminhoArquivoAssinatura);
     }
 
-    private List<Cliente> carregarClientes(String caminhoArquivo) {
+    private List<Cliente> carregarClientes(String caminhoArquivoCliente) {
         List<Cliente> clientes = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivoCliente))) {
             String linha;
             while ((linha = br.readLine()) != null) {
                 String[] partes = linha.split(";");
@@ -167,10 +169,10 @@ public class EmpresaWindow extends JFrame {
         return clientes;
     }
 
-    private List<Aplicativo> carregarAplicativos(String caminhoArquivo) {
+    private List<Aplicativo> carregarAplicativos(String caminhoArquivoAplicativo) {
         List<Aplicativo> aplicativos = new ArrayList<>();
     
-        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivoAplicativo))) {
             String linha;
             while ((linha = br.readLine()) != null) {
                 String[] partes = linha.split(";");
