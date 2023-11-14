@@ -112,14 +112,14 @@ public class EmpresaWindow extends JFrame {
     private void carregarInformacoesEmpresa() {
         // Implemente a lógica para carregar as informações da empresa a partir do arquivo "Empresa.txt"
         String caminhoArquivoEmpresa = "./TF_2023/Empresa.txt";
-
+    
         try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivoEmpresa))) {
             String linha;
             while ((linha = br.readLine()) != null) {
                 String[] partes = linha.split(";");
-                if (partes.length >= 3 && partes[2].equalsIgnoreCase(email)) {
-                    cnpj = partes[0];
-                    nome = partes[1];
+                if (partes.length >= 4 && partes[0].equalsIgnoreCase(email)) {
+                    cnpj = partes[3].trim();
+                    nome = partes[2].trim();
                     break;  // Encontrou a empresa, pode sair do loop
                 }
             }

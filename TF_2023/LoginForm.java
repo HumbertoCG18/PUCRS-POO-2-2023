@@ -45,9 +45,13 @@ public class LoginForm extends JFrame {
         add(panel);
     }
 
-    private boolean autenticarUsuario(String usuario, char[] senha, String tipoUsuario) {
-        File caminhoArquivo = tipoUsuario.equals("empresa") ? new File("./TF_2023/Empresa.txt") : new File("./TF_2023/Cliente.txt");
 
+    private boolean autenticarUsuario(String usuario, char[] senha, String tipoUsuario) {
+        String diretorioAtual = System.getProperty("user.dir");
+        File caminhoArquivo = tipoUsuario.equals("empresa") ?
+                new File(diretorioAtual + "/Empresa.txt") :
+                new File(diretorioAtual + "/Cliente.txt");
+    
         if (caminhoArquivo.exists() && !usuario.isEmpty() && verificarSenha(usuario, senha, caminhoArquivo)) {
             return true;
         } else {
@@ -55,30 +59,68 @@ public class LoginForm extends JFrame {
             return false;
         }
     }
-
-    private boolean verificarSenha(String email, char[] senha, File caminhoArquivo) {
+    
+    private boolean verificarSenha(String usuario, char[] senha, File caminhoArquivo) {
         String senhaDigitada = new String(senha);
+    
         try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
             String linha;
             while ((linha = br.readLine()) != null) {
                 String[] partes = linha.split(";");
-                if (partes.length >= 3 && partes[2].equalsIgnoreCase(email) && partes[3].equals(senhaDigitada)) {
+                if (partes.length >= 2 && partes[0].equalsIgnoreCase(usuario)) {
+                    String senhaArmazenada = partes[1]; // A senha está na segunda posição (0-indexed)
+                    return senhaDigitada.equals(senhaArmazenada);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    
+        return false; // Tratamento de erro ou usuário não encontrado
+    }
+
+    private String getEmailTipoUsuario(String email) {
+        String diretorioAtual = System.getProperty("user.dir");
+        File caminhoCliente = new File(diretorioAtual + "/Cliente.txt");
+        File caminhoEmpresa = new File(diretorioAtual + "/Empresa.txt");
+    
+        if (existeEmailNoArquivo(email, caminhoCliente)) {
+            return "cliente";
+        } else if (existeEmailNoArquivo(email, caminhoEmpresa)) {
+            return "empresa";
+        }
+    
+        return null;
+    }
+
+    private boolean existeEmailNoArquivo(String email, File caminhoArquivo) {
+        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
+            String linha;
+            while ((linha = br.readLine()) != null) {
+                String[] partes = linha.split(";");
+                if (partes.length >= 1 && partes[0].equalsIgnoreCase(email)) {
                     return true;
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        return false;  // Email ou senha não encontrados ou erro na leitura do arquivo
+    
+        return false;
     }
-
+    
     private void abrirCadastroCliente() {
-        SwingUtilities.invokeLater(() -> new CadastroClienteGUI().setVisible(true));
+        SwingUtilities.invokeLater(() -> {
+            CadastroClienteGUI cadastroClienteGUI = new CadastroClienteGUI();
+            cadastroClienteGUI.setVisible(true);
+        });
     }
 
     private void abrirCadastroEmpresa() {
-        SwingUtilities.invokeLater(() -> new CadastroEmpresaGUI().setVisible(true));
+        SwingUtilities.invokeLater(() -> {
+            CadastroEmpresaGUI cadastroEmpresaGUI = new CadastroEmpresaGUI();
+            cadastroEmpresaGUI.setVisible(true);
+        });
     }
 
     private void realizarLogin() {
@@ -96,34 +138,6 @@ public class LoginForm extends JFrame {
         }
     }
 
-    private String getEmailTipoUsuario(String email) {
-        File caminhoCliente = new File("./TF_2023/Cliente.txt");
-        File caminhoEmpresa = new File("./TF_2023/Empresa.txt");
-
-        if (existeEmailNoArquivo(email, caminhoCliente)) {
-            return "cliente";
-        } else if (existeEmailNoArquivo(email, caminhoEmpresa)) {
-            return "empresa";
-        }
-
-        return null;
-    }
-
-    private boolean existeEmailNoArquivo(String email, File caminhoArquivo) {
-        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
-            String linha;
-            while ((linha = br.readLine()) != null) {
-                String[] partes = linha.split(";");
-                if (partes.length >= 3 && partes[2].equalsIgnoreCase(email)) {
-                    return true;
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
 
     private void abrirJanelaPrincipal(String usuario, String tipoUsuario) {
         if (tipoUsuario.equalsIgnoreCase("cliente")) {
