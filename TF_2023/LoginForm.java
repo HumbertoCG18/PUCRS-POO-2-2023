@@ -139,8 +139,11 @@ public class LoginForm extends JFrame {
 
     private void abrirJanelaPrincipal(String usuario, String tipoUsuario) {
         if (tipoUsuario.equalsIgnoreCase("cliente")) {
+            List<Cliente> listaClientes = new ArrayList<>();
+            List<Aplicativo> listaAplicativos = new ArrayList<>();
+            List<Assinatura> listaAssinaturas = new ArrayList<>();
             SwingUtilities.invokeLater(() -> {
-                ClienteWindow clienteWindow = new ClienteWindow(usuario);
+                ClienteWindow clienteWindow = new ClienteWindow(usuario, listaAplicativos, listaAssinaturas, listaClientes);
                 clienteWindow.setVisible(true);
                 dispose(); // Fechar a tela de login
             });
