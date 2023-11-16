@@ -3,6 +3,7 @@ import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ClienteWindow extends JFrame {
     private String email;
@@ -53,15 +54,29 @@ public class ClienteWindow extends JFrame {
 
     private JPanel createAplicativoPanel() {
         JPanel panel = new JPanel(new BorderLayout());
-        JTable aplicativoTable = createAplicativoTable(listaAplicativos);
-        JScrollPane scrollPane = new JScrollPane(aplicativoTable);
-        panel.add(scrollPane, BorderLayout.CENTER);
+
+        Cliente clienteAtual = null;
+        for (Cliente cliente : listaClientes) {
+            if (cliente.getEmail().equalsIgnoreCase(email)) {
+                clienteAtual = cliente;
+                break;
+            }
+        }
+
+        if (clienteAtual != null) {
+            Map<Integer, Aplicativo> aplicativosCliente = clienteAtual.getAplicativos();
+            JTable aplicativoTable = createAplicativoTable(new ArrayList<>(aplicativosCliente.values()));
+            JScrollPane scrollPane = new JScrollPane(aplicativoTable);
+            panel.add(scrollPane, BorderLayout.CENTER);
+        } else {
+            JLabel noAppsLabel = new JLabel("Nenhum aplicativo vinculado a este cliente.");
+            panel.add(noAppsLabel, BorderLayout.CENTER);
+        }
 
         JPanel buttonsPanel = new JPanel();
         panel.add(buttonsPanel, BorderLayout.SOUTH);
-    
-        return panel;
 
+        return panel;
     }
 
     private JTable createAplicativoTable(List<Aplicativo> aplicativos) {
@@ -78,6 +93,7 @@ public class ClienteWindow extends JFrame {
     
         return new JTable(data, columnNames);
     }
+
 
     private JPanel createAssinaturaPanel() {
         JPanel panel = new JPanel(new BorderLayout());
