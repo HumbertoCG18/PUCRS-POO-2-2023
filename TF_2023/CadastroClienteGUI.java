@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -69,9 +70,10 @@ public class CadastroClienteGUI extends JFrame {
     }
 
     private void cadastrarNoArquivo(String cpf, String nome, String email, String senha) {
-        String caminhoArquivo = "./TF_2023/Cliente.txt";
+    String diretorioAtual = System.getProperty("user.dir");
+    File caminhoArquivoCliente = new File(diretorioAtual + "/Cliente.txt");
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminhoArquivo, true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminhoArquivoCliente, true))) {
             // Formato: CPF;Nome;Email;Senha
             writer.write(cpf + ";" + nome + ";" + email + ";" + senha);
             writer.newLine();  // Adiciona uma nova linha para o próximo cadastro

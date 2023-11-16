@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -32,10 +33,10 @@ public class ClienteWindow extends JFrame {
     }
 
     private void carregarInformacoesCliente() {
-        // Lógica para carregar as informações do cliente a partir do arquivo "Clientes.txt"
-        String caminhoArquivo = "./TF_2023/Cliente.txt";
+    String diretorioAtual = System.getProperty("user.dir");
+    File caminhoArquivoCliente = new File(diretorioAtual + "/Cliente.txt");
 
-        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivoCliente))) {
             String linha;
             while ((linha = br.readLine()) != null) {
                 String[] partes = linha.split(";");

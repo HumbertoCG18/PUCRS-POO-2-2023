@@ -1,6 +1,7 @@
 // Importe as classes necessárias
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -84,9 +85,10 @@ public class Assinatura {
     }
     
     private double obterValorMensalDoArquivo(int codigoAplicativo) {
-        String caminhoArquivo = "./TF_2023/Aplicativos.txt";
+        String diretorioAtual = System.getProperty("user.dir");
+        File caminhoArquivoAssinatura = new File(diretorioAtual + "/Assinaturas.txt");
     
-        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivoAssinatura))) {
             String linha;
             while ((linha = br.readLine()) != null) {
                 String[] partes = linha.split(";");
@@ -105,9 +107,10 @@ public class Assinatura {
     }
     
     private Aplicativo obterAplicativo() {
-        String caminhoArquivo = "./TF_2023/Aplicativos.txt";
+        String diretorioAtual = System.getProperty("user.dir");
+        File caminhoArquivoAplicativos = new File(diretorioAtual + "/Aplicativos.txt");
     
-        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivoAplicativos))) {
             String linha;
             while ((linha = br.readLine()) != null) {
                 String[] partes = linha.split(";");

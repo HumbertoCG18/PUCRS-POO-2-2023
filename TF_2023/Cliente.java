@@ -33,4 +33,8 @@ public class Cliente {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public Cliente get(int i) {
+        return null;
+    }
 }
