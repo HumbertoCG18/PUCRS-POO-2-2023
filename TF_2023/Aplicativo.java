@@ -6,13 +6,13 @@ import java.util.List;
 
 public class Aplicativo {
     private int codigo;
-    private String nome;
+    private String nomeAplicativo;
     private String sistemaOperacional;
     private double valorMensal;
 
-    public Aplicativo(int codigo, String nome, String sistemaOperacional, double valorMensal) {
+    public Aplicativo(int codigo, String nomeAplicativo, String sistemaOperacional, double valorMensal) {
         this.codigo = codigo;
-        this.nome = nome;
+        this.nomeAplicativo = nomeAplicativo;
         this.sistemaOperacional = sistemaOperacional;
         this.valorMensal = valorMensal;
     }
@@ -26,11 +26,11 @@ public class Aplicativo {
     }
 
     public String getNome() {
-        return nome;
+        return nomeAplicativo;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setNome(String nomeAplicativo) {
+        this.nomeAplicativo = nomeAplicativo;
     }
 
     public String getSistemaOperacional() {

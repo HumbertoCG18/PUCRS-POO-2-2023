@@ -1,13 +1,12 @@
-// Importe as classes necessárias
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 import javax.swing.JOptionPane;
 
-// Classe Assinatura
 public class Assinatura {
     private int codigo;
     private int codigoAplicativo;
@@ -68,9 +67,27 @@ public class Assinatura {
         this.fimVigencia = fimVigencia;
     }
 
-    //Aplicativo aplicativo = obterAplicativo();
+    private String nomeAplicativo;
+    private String nomeCliente;
 
-    public double calcularCobrancaMensal() {
+    public String getNomeAplicativo() {
+        return nomeAplicativo;
+    }
+
+    public void setNomeAplicativo(String nomeAplicativo) {
+        this.nomeAplicativo = nomeAplicativo;
+    }
+
+    public String getNomeCliente() {
+        return nomeCliente;
+    }
+
+    public void setNomeCliente(String nomeCliente) {
+        this.nomeCliente = nomeCliente;
+    }
+
+
+     public double calcularCobrancaMensal() {
         double valorMensalArquivo = obterValorMensalDoArquivo(codigoAplicativo);
         Aplicativo aplicativo = obterAplicativo();
         if (aplicativo != null) {
@@ -80,71 +97,87 @@ public class Assinatura {
                 return valorMensalArquivo;
             }
         }
-        // Retorna -1 como sinal de que o aplicativo associado não foi encontrado ou o valor mensal não está disponível
         return -1;
     }
-    
+
     private double obterValorMensalDoArquivo(int codigoAplicativo) {
         String diretorioAtual = System.getProperty("user.dir");
         File caminhoArquivoAssinatura = new File(diretorioAtual + "/Assinaturas.txt");
-    
+
         try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivoAssinatura))) {
             String linha;
             while ((linha = br.readLine()) != null) {
                 String[] partes = linha.split(";");
                 int codigoAplicativoArquivo = Integer.parseInt(partes[0].trim());
                 if (codigoAplicativoArquivo == codigoAplicativo) {
-                    // Encontrou o aplicativo correspondente
-                    return Double.parseDouble(partes[3].trim()); // Retorna o valor mensal
+                    return Double.parseDouble(partes[3].trim());
                 }
             }
         } catch (IOException | NumberFormatException ex) {
             ex.printStackTrace();
         }
-    
-        // Retorna -1 se o aplicativo não for encontrado
         return -1;
     }
-    
+
     private Aplicativo obterAplicativo() {
         String diretorioAtual = System.getProperty("user.dir");
         File caminhoArquivoAplicativos = new File(diretorioAtual + "/Aplicativos.txt");
-    
+
         try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivoAplicativos))) {
             String linha;
             while ((linha = br.readLine()) != null) {
                 String[] partes = linha.split(";");
                 int codigoAplicativoArquivo = Integer.parseInt(partes[0].trim());
                 if (codigoAplicativoArquivo == codigoAplicativo) {
-                    // Encontrou o aplicativo correspondente
                     return new Aplicativo(codigoAplicativoArquivo, partes[1].trim(), partes[2].trim(), Double.parseDouble(partes[3].trim()));
                 }
             }
         } catch (IOException | NumberFormatException ex) {
             ex.printStackTrace();
         }
-    
-        // Retorna null se o aplicativo não for encontrado
         return null;
     }
 
-
-    public void salvarAssinatura() {
+    public void salvarAssinatura(List<Assinatura> assinaturas, String caminhoArquivoAssinatura) {
         double cobrancaMensal = calcularCobrancaMensal();
 
-        // Se o cálculo da cobrança mensal for bem-sucedido
         if (cobrancaMensal != -1) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter("./TF_2023/Assinaturas.txt", true))) {
-                // Adiciona uma linha ao arquivo contendo os dados da assinatura e a cobrança mensal
-                writer.write(String.format("%d;%d;%s;%s;%s;%.2f%n", codigo, codigoAplicativo, cpfCliente, inicioVigencia, fimVigencia, cobrancaMensal));
-                JOptionPane.showMessageDialog(null, "Assinatura cadastrada com sucesso! Cobrança mensal: R$" + cobrancaMensal);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(null, "Erro ao cadastrar a assinatura.");
+            String[] dadosCliente = buscarDadosClientePorEmail(cpfCliente);
+            String nomeCliente = dadosCliente != null ? dadosCliente[0] : null;
+            String cpfCliente = dadosCliente != null ? dadosCliente[1] : null;
+
+            if (nomeCliente != null && cpfCliente != null) {
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminhoArquivoAssinatura, true))) {
+                    writer.write(String.format("%d;%d;%s;%s;%s;%.2f;%s;%s%n", codigo, codigoAplicativo, cpfCliente, nomeCliente, inicioVigencia, fimVigencia, cobrancaMensal));
+                    JOptionPane.showMessageDialog(null, "Assinatura cadastrada com sucesso! Cobrança mensal: R$" + cobrancaMensal);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Erro ao cadastrar a assinatura.");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Erro ao encontrar o cliente associado ao CPF.");
             }
         } else {
-            // Exibe uma mensagem de erro caso o aplicativo associado não seja encontrado
             JOptionPane.showMessageDialog(null, "Erro ao calcular a cobrança mensal. Aplicativo associado não encontrado.");
         }
+    }
+
+    private String[] buscarDadosClientePorEmail(String email) {
+        String diretorioAtual = System.getProperty("user.dir");
+        File caminhoArquivoCliente = new File(diretorioAtual + "/Cliente.txt");
+
+        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivoCliente))) {
+            String linha;
+            while ((linha = br.readLine()) != null) {
+                String[] partes = linha.split(";");
+                String emailArquivo = partes[0].trim();
+                if (emailArquivo.equals(email)) {
+                    return new String[]{partes[2].trim(), partes[3].trim()};
+                }
+            }
+        } catch (IOException | ArrayIndexOutOfBoundsException ex) {
+            ex.printStackTrace();
+        }
+        return null;
     }
 }
