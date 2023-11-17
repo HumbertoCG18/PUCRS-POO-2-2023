@@ -9,22 +9,22 @@ public class CadastroAplicativoGUI extends JFrame {
     private JTextField codigoField;
     private JTextField nomeField;
     private JTextField soField;
-    private JTextField valorMensalField;
+    private JComboBox<String> assinaturaComboBox; // Adicionando combo box para selecionar a assinatura
     private JButton cadastrarButton;
 
-    private Aplicativo aplicativo; // Referência para o objeto Aplicativo
-    private List<Aplicativo> listaAplicativos; // Lista para armazenar os aplicativos
+    private Aplicativo aplicativo;
+    private List<Aplicativo> listaAplicativos;
 
     public CadastroAplicativoGUI(Aplicativo aplicativo, List<Aplicativo> listaAplicativos) {
         this.aplicativo = aplicativo;
         this.listaAplicativos = listaAplicativos;
 
         setTitle("Cadastro de Aplicativo");
-        setSize(300, 200);
+        setSize(300, 250);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(5, 2));
+        panel.setLayout(new GridLayout(6, 2));
 
         panel.add(new JLabel("Código:"));
         codigoField = new JTextField();
@@ -38,42 +38,53 @@ public class CadastroAplicativoGUI extends JFrame {
         soField = new JTextField();
         panel.add(soField);
 
+        panel.add(new JLabel("Assinatura:"));
+        String[] assinaturas = {"Básica", "VIP", "Premium"};
+        assinaturaComboBox = new JComboBox<>(assinaturas);
+        panel.add(assinaturaComboBox);
+
         panel.add(new JLabel("Valor Mensal:"));
-        valorMensalField = new JTextField();
+        JTextField valorMensalField = new JTextField();
+        valorMensalField.setEditable(false); // Campo para exibir o valor mensal (não editável)
         panel.add(valorMensalField);
 
         cadastrarButton = new JButton("Cadastrar");
         cadastrarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cadastrarAplicativo();
+                cadastrarAplicativo(valorMensalField);
             }
         });
         panel.add(cadastrarButton);
 
+        // Adiciona um listener para alterar o valor mensal quando a assinatura é selecionada
+        assinaturaComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int idAssinatura = assinaturaComboBox.getSelectedIndex() + 1;
+                double valorMensal = aplicativo.calcularValorMensal(idAssinatura);
+                valorMensalField.setText(String.valueOf(valorMensal));
+            }
+        });
+
         add(panel);
     }
 
-    private void cadastrarAplicativo() {
+    private void cadastrarAplicativo(JTextField valorMensalField) {
         try {
             int codigo = Integer.parseInt(codigoField.getText());
             String nome = nomeField.getText();
             String so = soField.getText();
             double valorMensal = Double.parseDouble(valorMensalField.getText());
 
-            // Atualiza o objeto Aplicativo com os novos dados
             aplicativo.setCodigo(codigo);
             aplicativo.setNome(nome);
             aplicativo.setSistemaOperacional(so);
             aplicativo.setValorMensal(valorMensal);
 
-            // Adiciona o Aplicativo à lista (simulando armazenamento)
             listaAplicativos.add(aplicativo);
 
-            // Exemplo de exibição de mensagem de sucesso
             JOptionPane.showMessageDialog(this, "Aplicativo cadastrado/editado com sucesso!");
-
-            // Limpar os campos após cadastrar/editar
             limparCampos();
 
         } catch (NumberFormatException ex) {
@@ -85,14 +96,13 @@ public class CadastroAplicativoGUI extends JFrame {
         codigoField.setText("");
         nomeField.setText("");
         soField.setText("");
-        valorMensalField.setText("");
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 List<Aplicativo> listaAplicativos = new ArrayList<>();
-                Aplicativo aplicativo = new Aplicativo(0, "", "", 0.0);
+                Aplicativo aplicativo = new Aplicativo(0, "", "");
                 new CadastroAplicativoGUI(aplicativo, listaAplicativos).setVisible(true);
             }
         });

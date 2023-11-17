@@ -110,7 +110,7 @@ public class ClienteWindow extends JFrame {
 
     private List<Assinatura> carregarAssinaturas(String caminhoArquivoAssinatura, List<Aplicativo> aplicativos, List<Cliente> clientes) {
         List<Assinatura> assinaturas = new ArrayList<>();
-        
+
         try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivoAssinatura))) {
             String linha;
             while ((linha = br.readLine()) != null) {
@@ -118,20 +118,22 @@ public class ClienteWindow extends JFrame {
                 if (partes.length >= 6) {
                     int codigoAplicativo = Integer.parseInt(partes[1].trim());
                     String cpfCliente = partes[2].trim();
-    
+
                     // Encontrando o aplicativo correspondente ao código
                     Aplicativo aplicativo = buscarAplicativoPorCodigo(aplicativos, codigoAplicativo);
                     // Encontrando o cliente correspondente ao CPF
                     Cliente cliente = buscarClientePorCPF(clientes, cpfCliente);
-    
+
                     if (aplicativo != null && cliente != null) {
+                        double valorMensal = aplicativo.calcularValorMensal(Integer.parseInt(partes[6].trim()));
+
                         Assinatura assinatura = new Assinatura(
                                 Integer.parseInt(partes[0].trim()),
                                 codigoAplicativo,
                                 cpfCliente,
                                 partes[3].trim(),
                                 partes[4].trim(),
-                                Double.parseDouble(partes[5].trim())
+                                valorMensal // Define o valor mensal com base no ID da assinatura
                         );
                         assinatura.setNomeAplicativo(aplicativo.getNome());
                         assinatura.setNomeCliente(cliente.getNome());
@@ -142,7 +144,7 @@ public class ClienteWindow extends JFrame {
         } catch (IOException | NumberFormatException e) {
             e.printStackTrace();
         }
-    
+
         return assinaturas;
     }
     
