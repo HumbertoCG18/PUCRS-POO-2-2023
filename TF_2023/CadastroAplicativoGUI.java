@@ -2,23 +2,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 public class CadastroAplicativoGUI extends JFrame {
     private JTextField codigoField;
     private JTextField nomeField;
     private JTextField soField;
-    private JComboBox<String> assinaturaComboBox; // Adicionando combo box para selecionar a assinatura
+    private JComboBox<String> assinaturaComboBox;
     private JButton cadastrarButton;
 
-    private Aplicativo aplicativo;
-    private List<Aplicativo> listaAplicativos;
-
-    public CadastroAplicativoGUI(Aplicativo aplicativo, List<Aplicativo> listaAplicativos) {
-        this.aplicativo = aplicativo;
-        this.listaAplicativos = listaAplicativos;
-
+    public CadastroAplicativoGUI() {
         setTitle("Cadastro de Aplicativo");
         setSize(300, 250);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -45,7 +37,7 @@ public class CadastroAplicativoGUI extends JFrame {
 
         panel.add(new JLabel("Valor Mensal:"));
         JTextField valorMensalField = new JTextField();
-        valorMensalField.setEditable(false); // Campo para exibir o valor mensal (não editável)
+        valorMensalField.setEditable(false);
         panel.add(valorMensalField);
 
         cadastrarButton = new JButton("Cadastrar");
@@ -62,7 +54,7 @@ public class CadastroAplicativoGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int idAssinatura = assinaturaComboBox.getSelectedIndex() + 1;
-                double valorMensal = aplicativo.calcularValorMensal(idAssinatura);
+                double valorMensal = Aplicativo.calcularValorMensalPeloCodigo(idAssinatura);
                 valorMensalField.setText(String.valueOf(valorMensal));
             }
         });
@@ -77,14 +69,17 @@ public class CadastroAplicativoGUI extends JFrame {
             String so = soField.getText();
             double valorMensal = Double.parseDouble(valorMensalField.getText());
 
-            aplicativo.setCodigo(codigo);
-            aplicativo.setNome(nome);
-            aplicativo.setSistemaOperacional(so);
-            aplicativo.setValorMensal(valorMensal);
+            Aplicativo app = Aplicativo.getAplicativoPeloCodigo(codigo);
+            if (app != null) {
+                app.setNome(nome);
+                app.setSistemaOperacional(so);
+                app.setValorMensal(valorMensal);
 
-            listaAplicativos.add(aplicativo);
+                JOptionPane.showMessageDialog(this, "Aplicativo editado com sucesso!");
+            } else {
+                JOptionPane.showMessageDialog(this, "Código de aplicativo não encontrado!");
+            }
 
-            JOptionPane.showMessageDialog(this, "Aplicativo cadastrado/editado com sucesso!");
             limparCampos();
 
         } catch (NumberFormatException ex) {
@@ -101,9 +96,7 @@ public class CadastroAplicativoGUI extends JFrame {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                List<Aplicativo> listaAplicativos = new ArrayList<>();
-                Aplicativo aplicativo = new Aplicativo(0, "", "");
-                new CadastroAplicativoGUI(aplicativo, listaAplicativos).setVisible(true);
+                new CadastroAplicativoGUI().setVisible(true);
             }
         });
     }

@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.awt.event.ActionEvent;
 
 public class EmpresaWindow extends JFrame {
     private String email;
@@ -35,12 +36,10 @@ public class EmpresaWindow extends JFrame {
         JPanel infoPanel = createInfoPanel();
         JPanel clientePanel = createClientePanel();
         JPanel aplicativoPanel = createAplicativoPanel();
-        JPanel assinaturaPanel = createAssinaturaPanel();
 
-        tabbedPane.addTab("Informações", infoPanel);
+        tabbedPane.addTab("Informacoes", infoPanel);
         tabbedPane.addTab("Visualizar Clientes", clientePanel);
         tabbedPane.addTab("Visualizar Aplicativos", aplicativoPanel);
-        tabbedPane.addTab("Visualizar Assinaturas", assinaturaPanel);
 
         add(tabbedPane, BorderLayout.CENTER);
     }
@@ -72,7 +71,11 @@ public class EmpresaWindow extends JFrame {
         JButton deleteButton = new JButton("Excluir Cliente");
         deleteButton.addActionListener(e -> excluirCliente(clienteTable));
         JButton saveButton = new JButton("Salvar Alterações");
-        saveButton.addActionListener(e -> salvarAlteracoes());
+        saveButton.addActionListener(e -> {
+            salvarAlteracoes();
+            JOptionPane.showMessageDialog(this, "Alterações nos clientes salvas com sucesso!");
+            refreshClienteTable(); // Atualiza a tabela de clientes após salvar as alterações
+        });
     
         JPanel buttonsPanel = new JPanel();
         buttonsPanel.add(addButton);
@@ -83,9 +86,71 @@ public class EmpresaWindow extends JFrame {
         return panel;
     }
     
+    
+    public class AddClienteDialog extends JDialog {
+        private JTextField cpfField;
+        private JTextField nomeField;
+        private JTextField emailField;
+        private List<Cliente> listaClientes;
+        private boolean clienteAdicionado = false;
+
+        public boolean isClienteAdicionado() {
+            return clienteAdicionado;
+        }
+    
+        public AddClienteDialog(Frame owner, List<Cliente> listaClientes) {
+            super(owner, "Adicionar Cliente", true);
+            this.listaClientes = listaClientes;
+    
+            JPanel panel = new JPanel(new GridLayout(4, 2));
+    
+            panel.add(new JLabel("CPF:"));
+            cpfField = new JTextField();
+            panel.add(cpfField);
+    
+            panel.add(new JLabel("Nome:"));
+            nomeField = new JTextField();
+            panel.add(nomeField);
+    
+            panel.add(new JLabel("Email:"));
+            emailField = new JTextField();
+            panel.add(emailField);
+    
+            JButton salvarButton = new JButton("Salvar");
+            salvarButton.addActionListener(this::salvarNovoCliente);
+            panel.add(salvarButton);
+    
+            JButton cancelarButton = new JButton("Cancelar");
+            cancelarButton.addActionListener(e -> dispose());
+            panel.add(cancelarButton);
+    
+            add(panel);
+            pack();
+            setLocationRelativeTo(owner);
+        }
+    
+        private void salvarNovoCliente(ActionEvent e) {
+            String cpf = cpfField.getText();
+            String nome = nomeField.getText();
+            String email = emailField.getText();
+    
+            if (!cpf.isEmpty() && !nome.isEmpty() && !email.isEmpty()) {
+                Cliente novoCliente = new Cliente(cpf, nome, email);
+                listaClientes.add(novoCliente);
+                clienteAdicionado = true; // Define como true quando um novo cliente é adicionado
+                dispose(); // Fecha a janela de cadastro
+            } else {
+                JOptionPane.showMessageDialog(this, "Preencha todos os campos.");
+            }
+        }
+    }
+
+
     private void adicionarCliente() {
-        Cliente novoCliente = new Cliente("Novo CPF", "Novo Nome", "Novo Email");
-        listaClientes.add(novoCliente);
+        AddClienteDialog dialog = new AddClienteDialog(this, listaClientes);
+        dialog.setVisible(true); // Mostra a janela de cadastro
+    
+        // Atualiza a tabela apenas se um novo cliente foi adicionado
         refreshClienteTable();
     }
     
@@ -97,35 +162,35 @@ public class EmpresaWindow extends JFrame {
         }
     }
     
-private void salvarAlteracoes() {
-    String diretorioAtual = System.getProperty("user.dir");
-        File caminhoArquivoCliente = new File(diretorioAtual + "/Cliente.txt");
+    private void salvarAlteracoes() {
+        String caminhoArquivoCliente = System.getProperty("user.dir") + "/Cliente.txt";
 
-    try (PrintWriter writer = new PrintWriter(new FileWriter(caminhoArquivoCliente))) {
-        for (Cliente cliente : listaClientes) {
-            writer.println(cliente.getCpf() + ";" + cliente.getNome() + ";" + cliente.getEmail());
-        }
-    } catch (IOException e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(this, "Erro ao salvar alterações nos clientes.");
-    }
-}
-    
-    private void refreshClienteTable() {
-        // Atualiza a tabela de clientes após adicionar ou excluir um cliente
-        JTable clienteTable = createClienteTable(listaClientes);
-        JScrollPane scrollPane = new JScrollPane(clienteTable);
-        Component[] components = ((Container) getContentPane().getLayout()).getComponents();
-        for (Component component : components) {
-            if (component instanceof JScrollPane) {
-                getContentPane().remove(component);
-                getContentPane().add(scrollPane, BorderLayout.CENTER);
-                revalidate();
-                repaint();
-                break;
+        try (PrintWriter writer = new PrintWriter(new FileWriter(caminhoArquivoCliente))) {
+            for (Cliente cliente : listaClientes) {
+                writer.println(cliente.getCpf() + ";" + cliente.getNome() + ";" + cliente.getEmail());
             }
+            JOptionPane.showMessageDialog(this, "Alterações nos clientes salvas com sucesso!");
+        } catch (IOException e) {
+            exibirErroAoSalvar("clientes");
         }
     }
+    
+private void refreshClienteTable() {
+    JTable clienteTable = createClienteTable(listaClientes);
+    JScrollPane scrollPane = new JScrollPane(clienteTable);
+    atualizarTabela(scrollPane);
+}
+
+private void exibirErroAoSalvar(String tipo) {
+    JOptionPane.showMessageDialog(this, "Erro ao salvar alterações nos " + tipo + ".");
+}
+
+private void atualizarTabela(Component novaTabela) {
+    getContentPane().removeAll();
+    getContentPane().add(novaTabela, BorderLayout.CENTER);
+    revalidate();
+    repaint();
+}
     
     private JTable createClienteTable(List<Cliente> listaClientes) {
         String[] columnNames = {"CPF", "Nome", "Email"};
@@ -143,34 +208,36 @@ private void salvarAlteracoes() {
     
 
 
-    private JPanel createAplicativoPanel() {
-        JPanel panel = new JPanel(new BorderLayout());
-        JTable aplicativoTable = createAplicativoTable(listaAplicativos);
-        JScrollPane scrollPane = new JScrollPane(aplicativoTable);
-        panel.add(scrollPane, BorderLayout.CENTER);
-    
-        JButton addButton = new JButton("Adicionar Aplicativo");
-        addButton.addActionListener(e -> adicionarAplicativo());
-        JButton deleteButton = new JButton("Excluir Aplicativo");
-        deleteButton.addActionListener(e -> excluirAplicativo(aplicativoTable));
-        JButton saveButton = new JButton("Salvar Alterações");
-        saveButton.addActionListener(e -> salvarAlteracoesAplicativos());
-    
-        JPanel buttonsPanel = new JPanel();
-        buttonsPanel.add(addButton);
-        buttonsPanel.add(deleteButton);
-        buttonsPanel.add(saveButton);
-        panel.add(buttonsPanel, BorderLayout.SOUTH);
-    
-        return panel;
+private JPanel createAplicativoPanel() {
+    JPanel panel = new JPanel(new BorderLayout());
+    JTable aplicativoTable = createAplicativoTable(listaAplicativos);
+    JScrollPane scrollPane = new JScrollPane(aplicativoTable);
+    panel.add(scrollPane, BorderLayout.CENTER);
 
-    }
+    JButton addButton = new JButton("Adicionar Aplicativo");
+    addButton.addActionListener(e -> adicionarAplicativo("Nome do Aplicativo", "Sistema Operacional", 1)); // Substitua com os valores apropriados
+    JButton deleteButton = new JButton("Excluir Aplicativo");
+    deleteButton.addActionListener(e -> excluirAplicativo(aplicativoTable));
+    JButton saveButton = new JButton("Salvar Alterações");
+    saveButton.addActionListener(e -> salvarAlteracoesAplicativos());
 
-    private void adicionarAplicativo() {
-        // Gere um código para o novo aplicativo ou ajuste conforme necessário
+    JPanel buttonsPanel = new JPanel();
+    buttonsPanel.add(addButton);
+    buttonsPanel.add(deleteButton);
+    buttonsPanel.add(saveButton);
+    panel.add(buttonsPanel, BorderLayout.SOUTH);
+
+    return panel;
+}
+
+    private void adicionarAplicativo(String nome, String sistemaOperacional, int idAssinatura) {
         int novoCodigo = listaAplicativos.size() + 1;
+        Aplicativo novoApp = new Aplicativo(novoCodigo, nome, sistemaOperacional, 0); // Valor mensal será atualizado
         
-        Aplicativo novoApp = new Aplicativo(novoCodigo, "Novo Nome", "Novo Sistema Operacional", 0.0);
+        double valorMensal = novoApp.calcularValorMensal(idAssinatura);
+        novoApp.setIdAssinatura(idAssinatura);
+        novoApp.setValorMensal(valorMensal);
+        
         listaAplicativos.add(novoApp);
         refreshAplicativoTable();
     }
@@ -217,7 +284,7 @@ private void salvarAlteracoes() {
         }
     }    
     private JTable createAplicativoTable(List<Aplicativo> aplicativos) {
-        String[] columnNames = {"Código", "Nome", "Sistema Operacional", "Valor Mensal"};
+        String[] columnNames = {"Codigo", "Nome", "Sistema Operacional", "Valor Mensal"};
         Object[][] data = new Object[aplicativos.size()][columnNames.length];
     
         for (int i = 0; i < aplicativos.size(); i++) {
@@ -230,85 +297,31 @@ private void salvarAlteracoes() {
     
         return new JTable(data, columnNames);
     }
-
-    private JPanel createAssinaturaPanel() {
-        JPanel panel = new JPanel(new BorderLayout());
-        JTable assinaturaTable = createAssinaturaTable(listaAssinaturas);
-        JScrollPane scrollPane = new JScrollPane(assinaturaTable);
-        panel.add(scrollPane, BorderLayout.CENTER);
-
-        // Botões para adicionar, excluir e salvar alterações nas assinaturas
-        JButton adicionarAssButton = new JButton("Adicionar Assinatura");
-        adicionarAssButton.addActionListener(e -> adicionarAssinatura());
-        JButton excluirAssButton = new JButton("Excluir Assinatura");
-        excluirAssButton.addActionListener(e -> excluirAssinatura(assinaturaTable));
-        JButton salvarAssButton = new JButton("Salvar Alterações");
-        salvarAssButton.addActionListener(e -> salvarAlteracoesAssinaturas());
-
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.add(adicionarAssButton);
-        buttonPanel.add(excluirAssButton);
-        buttonPanel.add(salvarAssButton);
-
-        panel.add(buttonPanel, BorderLayout.SOUTH);
-
-        return panel;
-    }
     
-    private void adicionarAssinatura() {
-        // Gere um código para a nova assinatura ou ajuste conforme necessário
-        int novoCodigo = listaAssinaturas.size() + 1;
+    private <T> List<T> carregarDados(String caminhoArquivo, DataExtractor<T> extractor) {
+        List<T> dados = new ArrayList<>();
 
-        Assinatura novaAssinatura = new Assinatura(novoCodigo, 0, "Novo CPF", "Nova Data Inicial", "Nova Data Final", 0.0);
-        listaAssinaturas.add(novaAssinatura);
-        refreshAssinaturaTable();
-    }
-
-    private void excluirAssinatura(JTable assinaturaTable) {
-        int selectedRow = assinaturaTable.getSelectedRow();
-        if (selectedRow >= 0) {
-            listaAssinaturas.remove(selectedRow);
-            refreshAssinaturaTable();
-        }
-    }
-
-    private void salvarAlteracoesAssinaturas() {
-        String diretorioAtual = System.getProperty("user.dir");
-        File caminhoArquivoAssinaturas = new File(diretorioAtual + "/Assinaturas.txt");
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminhoArquivoAssinaturas))) {
-            for (Assinatura assinatura : listaAssinaturas) {
-                writer.write(String.format("%d;%d;%s;%s;%s;%.2f%n",
-                        assinatura.getCodigo(),
-                        assinatura.getCodigoAplicativo(),
-                        assinatura.getCpfCliente(),
-                        assinatura.getInicioVigencia(),
-                        assinatura.getFimVigencia(),
-                        assinatura.getValorMensal()));
+        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
+            String linha;
+            while ((linha = br.readLine()) != null) {
+                T dado = extractor.extractData(linha);
+                if (dado != null) {
+                    dados.add(dado);
+                }
             }
-            JOptionPane.showMessageDialog(null, "Alterações nas assinaturas salvas com sucesso!");
-        } catch (IOException e) {
+        } catch (IOException | NumberFormatException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Erro ao salvar alterações nas assinaturas.");
         }
+
+        return dados;
     }
 
-    private void refreshAssinaturaTable() {
-        JTable assinaturaTable = createAssinaturaTable(listaAssinaturas);
-        JScrollPane scrollPane = new JScrollPane(assinaturaTable);
-        Container container = getContentPane(); // Suponho que este método está dentro de uma classe que herda de JFrame
-        Component[] components = container.getComponents();
-        for (Component component : components) {
-            if (component instanceof JScrollPane) {
-                container.remove(component);
-                container.add(scrollPane, BorderLayout.CENTER);
-                revalidate();
-                repaint();
-                break;
-            }
-        }
+    private interface DataExtractor<T> {
+        T extractData(String linha);
     }
-    
+
+
+
 private List<Assinatura> carregarAssinaturas(String caminhoArquivoAssinatura, List<Aplicativo> aplicativos, List<Cliente> clientes) {
     List<Assinatura> assinaturas = new ArrayList<>();
     
@@ -365,24 +378,6 @@ private Cliente buscarClientePorCPF(List<Cliente> clientes, String cpf) {
     return null;
 }
 
-private JTable createAssinaturaTable(List<Assinatura> assinaturas) {
-    String[] columnNames = {"Código", "Código Aplicativo", "Nome Aplicativo", "CPF Cliente", "Nome Cliente", "Início Vigência", "Fim Vigência", "Valor Mensal"};
-    Object[][] data = new Object[assinaturas.size()][columnNames.length];
-
-    for (int i = 0; i < assinaturas.size(); i++) {
-        Assinatura assinatura = assinaturas.get(i);
-        data[i][0] = assinatura.getCodigo();
-        data[i][1] = assinatura.getCodigoAplicativo();
-        data[i][2] = assinatura.getNomeAplicativo();
-        data[i][3] = assinatura.getCpfCliente();
-        data[i][4] = assinatura.getNomeCliente();
-        data[i][5] = assinatura.getInicioVigencia();
-        data[i][6] = assinatura.getFimVigencia();
-        data[i][7] = assinatura.getValorMensal();
-    }
-
-    return new JTable(data, columnNames);
-}
     private void carregarInformacoesEmpresa() {
         // Obter o diretório atual
         String diretorioAtual = System.getProperty("user.dir");
@@ -404,8 +399,8 @@ private JTable createAssinaturaTable(List<Assinatura> assinaturas) {
 
         // Se não encontrou a empresa, atribuir valores padrão
         if (cnpj == null || nome == null) {
-            cnpj = "CNPJ não encontrado";
-            nome = "Nome não encontrado";
+            cnpj = "CNPJ nao encontrado";
+            nome = "Nome nao encontrado";
         }
 
         // Carregar informações dos clientes
@@ -420,48 +415,18 @@ private JTable createAssinaturaTable(List<Assinatura> assinaturas) {
         String caminhoArquivoAssinatura = diretorioAtual + "/Assinaturas.txt";
         listaAssinaturas = carregarAssinaturas(caminhoArquivoAssinatura, listaAplicativos, listaClientes);
     }
-
     private List<Cliente> carregarClientes(String caminhoArquivoCliente) {
-        List<Cliente> clientes = new ArrayList<>();
-
-        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivoCliente))) {
-            String linha;
-            while ((linha = br.readLine()) != null) {
-                String[] partes = linha.split(";");
-                if (partes.length >= 3) {
-                    Cliente cliente = new Cliente(partes[3].trim(), partes[2].trim(), partes[0].trim());
-                    clientes.add(cliente);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return clientes;
+        return carregarDados(caminhoArquivoCliente, linha -> {
+            String[] partes = linha.split(";");
+            return (partes.length >= 3) ? new Cliente(partes[0].trim(), partes[1].trim(), partes[2].trim()) : null;
+        });
     }
 
     private List<Aplicativo> carregarAplicativos(String caminhoArquivoAplicativo) {
-        List<Aplicativo> aplicativos = new ArrayList<>();
-    
-        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivoAplicativo))) {
-            String linha;
-            while ((linha = br.readLine()) != null) {
-                String[] partes = linha.split(";");
-                if (partes.length >= 4) {
-                    int codigo = Integer.parseInt(partes[0].trim());
-                    String nomeAplicativo = partes[1].trim();
-                    String sistemaOperacional = partes[2].trim();
-                    double valorMensal = Double.parseDouble(partes[3].trim());
-    
-                    Aplicativo app = new Aplicativo(codigo, nomeAplicativo, sistemaOperacional, valorMensal);
-                    aplicativos.add(app);
-                }
-            }
-        } catch (IOException | NumberFormatException e) {
-            e.printStackTrace();
-        }
-    
-        return aplicativos;
+        return carregarDados(caminhoArquivoAplicativo, linha -> {
+            String[] partes = linha.split(";");
+            return (partes.length >= 4) ? new Aplicativo(Integer.parseInt(partes[0].trim()), partes[1].trim(), partes[2].trim(), Double.parseDouble(partes[3].trim())) : null;
+        });
     }
 
 

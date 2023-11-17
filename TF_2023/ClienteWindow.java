@@ -79,20 +79,21 @@ public class ClienteWindow extends JFrame {
         return panel;
     }
 
-    private JTable createAplicativoTable(List<Aplicativo> aplicativos) {
-        String[] columnNames = {"Código", "Nome", "Sistema Operacional", "Valor Mensal"};
-        Object[][] data = new Object[aplicativos.size()][columnNames.length];
-    
-        for (int i = 0; i < aplicativos.size(); i++) {
-            Aplicativo aplicativo = aplicativos.get(i);
-            data[i][0] = aplicativo.getCodigo();
-            data[i][1] = aplicativo.getNome();
-            data[i][2] = aplicativo.getSistemaOperacional();
-            data[i][3] = aplicativo.getValorMensal();
-        }
-    
-        return new JTable(data, columnNames);
+private JTable createAplicativoTable(List<Aplicativo> aplicativos) {
+    String[] columnNames = {"Código", "Nome", "Sistema Operacional", "Valor Mensal", "ID Assinatura"};
+    Object[][] data = new Object[aplicativos.size()][columnNames.length];
+
+    for (int i = 0; i < aplicativos.size(); i++) {
+        Aplicativo aplicativo = aplicativos.get(i);
+        data[i][0] = aplicativo.getCodigo();
+        data[i][1] = aplicativo.getNome();
+        data[i][2] = aplicativo.getSistemaOperacional();
+        data[i][3] = aplicativo.getValorMensal();
+        data[i][4] = aplicativo.getIdAssinatura();
     }
+
+    return new JTable(data, columnNames);
+}
 
 
     private JPanel createAssinaturaPanel() {
@@ -125,7 +126,7 @@ public class ClienteWindow extends JFrame {
                     Cliente cliente = buscarClientePorCPF(clientes, cpfCliente);
 
                     if (aplicativo != null && cliente != null) {
-                        double valorMensal = aplicativo.calcularValorMensal(Integer.parseInt(partes[6].trim()));
+                        double valorMensal = aplicativo.calcularValorMensal(Integer.parseInt(partes[5].trim()));
 
                         Assinatura assinatura = new Assinatura(
                                 Integer.parseInt(partes[0].trim()),

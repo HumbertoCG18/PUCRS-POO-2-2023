@@ -14,11 +14,32 @@ public class Aplicativo {
     private String inicioVigencia;
     private String fimVigencia;
     private int idAssinatura;
+    private double valorMensal;
 
-    public Aplicativo(int codigo, String nomeAplicativo, String sistemaOperacional) {
+    private static List<Aplicativo> aplicativos = new ArrayList<>();
+
+    public Aplicativo(int codigo, String nome, String sistemaOperacional, double valorMensal) {
         this.codigo = codigo;
-        this.nomeAplicativo = nomeAplicativo;
+        this.nomeAplicativo = nome;
         this.sistemaOperacional = sistemaOperacional;
+        this.valorMensal = valorMensal;
+    }
+
+    public static Aplicativo getAplicativoPeloCodigo(int codigo) {
+        for (Aplicativo app : aplicativos) {
+            if (app.getCodigo() == codigo) {
+                return app;
+            }
+        }
+        return null; // Retorna null se não encontrar o aplicativo com o código especificado
+    }
+
+    public static double calcularValorMensalPeloCodigo(int codigo) {
+        Aplicativo app = getAplicativoPeloCodigo(codigo);
+        if (app != null) {
+            return app.getValorMensal();
+        }
+        return 0.0; // Retorna 0.0 se não encontrar o aplicativo com o código especificado
     }
 
     public void definirPrecosAssinatura(double valorAssinaturaBasica, double valorAssinaturaVip, double valorAssinaturaPremium) {
@@ -87,12 +108,17 @@ public class Aplicativo {
         this.idAssinatura = idAssinatura;
     }
 
+    public double getValorMensal() {
+        return valorMensal;
+    }
+
     public void setValorMensal(double valorMensal) {
+        this.valorMensal = valorMensal;
     }
 
     public double calcularValorMensal(int idAssinatura) {
         double valorMensal = 0.0;
-
+    
         switch (idAssinatura) {
             case 1:
                 valorMensal = valorAssinaturaBasica;
@@ -107,7 +133,7 @@ public class Aplicativo {
                 // Tratamento para assinatura inválida, se necessário
                 break;
         }
-
+    
         return valorMensal;
     }
 
@@ -115,13 +141,11 @@ public class Aplicativo {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminhoArquivoAplicativo))) {
             for (Aplicativo aplicativo : aplicativos) {
                 double valorMensal = aplicativo.calcularValorMensal(aplicativo.getIdAssinatura());
-                writer.write(String.format("%d;%s;%s;%.2f;%.2f;%.2f;%d%n",
+                writer.write(String.format("%d;%s;%s;%.2f;%d%n",
                         aplicativo.getCodigo(),
                         aplicativo.getNome(),
                         aplicativo.getSistemaOperacional(),
-                        aplicativo.getValorAssinaturaBasica(),
-                        aplicativo.getValorAssinaturaVip(),
-                        aplicativo.getValorAssinaturaPremium(),
+                        valorMensal,
                         aplicativo.getIdAssinatura()));
 
                 aplicativo.setValorMensal(valorMensal);
@@ -135,15 +159,15 @@ public class Aplicativo {
     public static void main(String[] args) {
         List<Aplicativo> aplicativos = new ArrayList<>();
 
-        Aplicativo app1 = new Aplicativo(1, "App1", "Android");
+        Aplicativo app1 = new Aplicativo(1, "App1", "Android", 9.90);
         app1.definirPrecosAssinatura(9.90, 18.90, 22.99);
         app1.setIdAssinatura(1); // Assinatura básica
 
-        Aplicativo app2 = new Aplicativo(2, "App2", "iOS");
+        Aplicativo app2 = new Aplicativo(2, "App2", "iOS", 9.90);
         app2.definirPrecosAssinatura(9.90, 18.90, 22.99);
         app2.setIdAssinatura(2); // Assinatura VIP
 
-        Aplicativo app3 = new Aplicativo(3, "App3", "Windows");
+        Aplicativo app3 = new Aplicativo(3, "App3", "Windows", 9.90);
         app3.definirPrecosAssinatura(9.90, 18.90, 22.99);
         app3.setIdAssinatura(3); // Assinatura Premium
 
