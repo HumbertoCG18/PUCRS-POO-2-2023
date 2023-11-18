@@ -1,3 +1,4 @@
+package src;
 import javax.swing.*;
 import java.awt.*;
 import java.io.BufferedReader;
@@ -170,7 +171,7 @@ public class EmpresaWindow extends JFrame {
 
 
     private void salvarAlteracoes() {
-        String caminhoArquivoCliente = System.getProperty("user.dir") + "/Cliente.txt";
+        String caminhoArquivoCliente = System.getProperty("user.dir") + "/src/Cliente.txt";
 
         try (PrintWriter writer = new PrintWriter(new FileWriter(caminhoArquivoCliente))) {
             for (Cliente cliente : listaClientes) {
@@ -193,7 +194,7 @@ public class EmpresaWindow extends JFrame {
 
     private void salvarAlteracoesAplicativos() {
         String diretorioAtual = System.getProperty("user.dir");
-        String caminhoArquivoAplicativos = diretorioAtual + "/Aplicativos.txt";
+        String caminhoArquivoAplicativos = diretorioAtual + "/src/Aplicativos.txt";
     
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminhoArquivoAplicativos))) {
             for (Aplicativo aplicativo : listaAplicativos) {
@@ -343,7 +344,7 @@ public class EmpresaWindow extends JFrame {
     private void carregarInformacoesEmpresa() {
         // Obter o diretório atual
         String diretorioAtual = System.getProperty("user.dir");
-        File caminhoArquivoEmpresa = new File(diretorioAtual + "/Empresa.txt");
+        File caminhoArquivoEmpresa = new File(diretorioAtual + "/src/Empresa.txt");
 
         try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivoEmpresa))) {
             String linha;
@@ -366,14 +367,12 @@ public class EmpresaWindow extends JFrame {
         }
 
         // Carregar informações dos clientes
-        String caminhoArquivoCliente = diretorioAtual + "/Cliente.txt";
+        String caminhoArquivoCliente = diretorioAtual + "/src/Cliente.txt";
         listaClientes = carregarClientes(caminhoArquivoCliente);
 
         // Carregar informações dos aplicativos
-        String caminhoArquivoAplicativo = diretorioAtual + "/Aplicativos.txt";
+        String caminhoArquivoAplicativo = diretorioAtual + "/src/Aplicativos.txt";
         listaAplicativos = carregarAplicativos(caminhoArquivoAplicativo);
-
-        // Carregar informações das assinaturas
     }
     
         private <T> List<T> carregarDados(String caminhoArquivo, DataExtractor<T> extractor) {

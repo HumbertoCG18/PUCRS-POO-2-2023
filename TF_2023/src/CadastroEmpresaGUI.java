@@ -1,3 +1,4 @@
+package src;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -69,7 +70,8 @@ public class CadastroEmpresaGUI extends JFrame {
     }
 
     private void cadastrarNoArquivo(String cnpj, String nome, String email, String senha) {
-        String caminhoArquivo = "./TF_2023/Empresa.txt";
+        String diretorioAtual = System.getProperty("user.dir");
+        String caminhoArquivo = diretorioAtual + "/src/Empresa.txt";
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminhoArquivo, true))) {
             // Formato: CNPJ;Nome;Email;Senha

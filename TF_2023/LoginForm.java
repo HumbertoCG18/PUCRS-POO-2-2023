@@ -1,4 +1,14 @@
 import javax.swing.*;
+
+import src.CadastroEmpresaGUI;
+
+
+import src.Aplicativo;
+import src.CadastroClienteGUI;
+import src.Cliente;
+import src.ClienteWindow;
+import src.EmpresaWindow;
+
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
@@ -48,7 +58,7 @@ public class LoginForm extends JFrame {
 
     private boolean autenticarUsuario(String usuario, char[] senha, String tipoUsuario) {
         String diretorioAtual = System.getProperty("user.dir");
-        File caminhoArquivo = tipoUsuario.equals("empresa") ? new File(diretorioAtual + "/Empresa.txt") : new File(diretorioAtual + "/Cliente.txt");
+        File caminhoArquivo = tipoUsuario.equals("empresa") ? new File(diretorioAtual + "/src/Empresa.txt") : new File(diretorioAtual + "/src/Cliente.txt");
     
         if (caminhoArquivo.exists() && !usuario.isEmpty() && verificarSenha(usuario, senha, caminhoArquivo)) {
             return true;
@@ -79,8 +89,8 @@ public class LoginForm extends JFrame {
 
     private String getEmailTipoUsuario(String email) {
         String diretorioAtual = System.getProperty("user.dir");
-        File caminhoCliente = new File(diretorioAtual + "/Cliente.txt");
-        File caminhoEmpresa = new File(diretorioAtual + "/Empresa.txt");
+        File caminhoCliente = new File(diretorioAtual + "/src/Cliente.txt");
+        File caminhoEmpresa = new File(diretorioAtual + "/src/Empresa.txt");
     
         if (existeEmailNoArquivo(email, caminhoCliente)) {
             return "cliente";

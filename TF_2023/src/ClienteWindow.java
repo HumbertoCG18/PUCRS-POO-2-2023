@@ -1,3 +1,4 @@
+package src;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -103,7 +104,7 @@ public class ClienteWindow extends JFrame {
 
     private void carregarInformacoesCliente() {
         String diretorioAtual = System.getProperty("user.dir");
-        File caminhoArquivoClientes = new File(diretorioAtual + "/Cliente.txt");
+        File caminhoArquivoClientes = new File(diretorioAtual + "/src/Cliente.txt");
     
         try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivoClientes))) {
             String linha;
@@ -126,7 +127,7 @@ public class ClienteWindow extends JFrame {
         }
 
         // Carregar informações dos aplicativos
-        String caminhoArquivoAplicativo = diretorioAtual + "/Aplicativos.txt";
+        String caminhoArquivoAplicativo = diretorioAtual + "src/Aplicativos.txt";
         listaAplicativos = carregarAplicativos(caminhoArquivoAplicativo);
 
         
@@ -161,7 +162,7 @@ public class ClienteWindow extends JFrame {
             return (partes.length >= 4) ? new Aplicativo(Integer.parseInt(partes[0].trim()), partes[1].trim(), partes[2].trim(), Double.parseDouble(partes[3].trim())) : null;
         });
     }
-    
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
