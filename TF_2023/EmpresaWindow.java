@@ -25,37 +25,27 @@ public class EmpresaWindow extends JFrame {
         this.listaClientes = listaClientes;
         this.listaAplicativos = listaAplicativos;
         this.listaAssinaturas = listaAssinaturas;
-        carregarInformacoesEmpresa(); // Carregar informações da empresa ao criar a janela
-    
+        carregarInformacoesEmpresa();
+
         setTitle("Janela da Empresa/Desenvolvedor");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JTabbedPane tabbedPane = new JTabbedPane();
-
-        JPanel infoPanel = createInfoPanel();
-        JPanel clientePanel = createClientePanel();
-        JPanel aplicativoPanel = createAplicativoPanel();
-
-        tabbedPane.addTab("Informacoes", infoPanel);
-        tabbedPane.addTab("Visualizar Clientes", clientePanel);
-        tabbedPane.addTab("Visualizar Aplicativos", aplicativoPanel);
+        tabbedPane.addTab("Informacoes", createInfoPanel());
+        tabbedPane.addTab("Visualizar Clientes", createClientePanel());
+        tabbedPane.addTab("Visualizar Aplicativos", createAplicativoPanel());
 
         add(tabbedPane, BorderLayout.CENTER);
     }
-
     private JPanel createInfoPanel() {
         JPanel panel = new JPanel(new GridLayout(3, 2));
-
         panel.add(new JLabel("CNPJ:"));
         panel.add(new JLabel(cnpj));
-
         panel.add(new JLabel("Nome:"));
         panel.add(new JLabel(nome));
-
         panel.add(new JLabel("Email:"));
         panel.add(new JLabel(email));
-
         return panel;
     }
 
@@ -85,7 +75,7 @@ public class EmpresaWindow extends JFrame {
     
         return panel;
     }
-    
+     
     
     public class AddClienteDialog extends JDialog {
         private JTextField cpfField;
@@ -146,6 +136,9 @@ public class EmpresaWindow extends JFrame {
     }
 
 
+
+
+    // Métodos para adicionar, excluir e salvar dados
     private void adicionarCliente() {
         AddClienteDialog dialog = new AddClienteDialog(this, listaClientes);
         dialog.setVisible(true); // Mostra a janela de cadastro
@@ -153,15 +146,8 @@ public class EmpresaWindow extends JFrame {
         // Atualiza a tabela apenas se um novo cliente foi adicionado
         refreshClienteTable();
     }
-    
-    private void excluirCliente(JTable clienteTable) {
-        int selectedRow = clienteTable.getSelectedRow();
-        if (selectedRow >= 0) {
-            listaClientes.remove(selectedRow);
-            refreshClienteTable();
-        }
-    }
-    
+
+
     private void salvarAlteracoes() {
         String caminhoArquivoCliente = System.getProperty("user.dir") + "/Cliente.txt";
 
@@ -174,74 +160,16 @@ public class EmpresaWindow extends JFrame {
             exibirErroAoSalvar("clientes");
         }
     }
-    
-private void refreshClienteTable() {
-    JTable clienteTable = createClienteTable(listaClientes);
-    JScrollPane scrollPane = new JScrollPane(clienteTable);
-    atualizarTabela(scrollPane);
-}
 
-private void exibirErroAoSalvar(String tipo) {
-    JOptionPane.showMessageDialog(this, "Erro ao salvar alterações nos " + tipo + ".");
-}
 
-private void atualizarTabela(Component novaTabela) {
-    getContentPane().removeAll();
-    getContentPane().add(novaTabela, BorderLayout.CENTER);
-    revalidate();
-    repaint();
-}
-    
-    private JTable createClienteTable(List<Cliente> listaClientes) {
-        String[] columnNames = {"CPF", "Nome", "Email"};
-        Object[][] data = new Object[listaClientes.size()][columnNames.length];
-    
-        for (int i = 0; i < listaClientes.size(); i++) {
-            Cliente cliente = listaClientes.get(i);
-            data[i][0] = cliente.getCpf();
-            data[i][1] = cliente.getNome();
-            data[i][2] = cliente.getEmail();
+    private void excluirCliente(JTable clienteTable) {
+        int selectedRow = clienteTable.getSelectedRow();
+        if (selectedRow >= 0) {
+            listaClientes.remove(selectedRow);
+            refreshClienteTable();
         }
-    
-        return new JTable(data, columnNames);
     }
-    
 
-
-private JPanel createAplicativoPanel() {
-    JPanel panel = new JPanel(new BorderLayout());
-    JTable aplicativoTable = createAplicativoTable(listaAplicativos);
-    JScrollPane scrollPane = new JScrollPane(aplicativoTable);
-    panel.add(scrollPane, BorderLayout.CENTER);
-
-    JButton addButton = new JButton("Adicionar Aplicativo");
-    addButton.addActionListener(e -> adicionarAplicativo("Nome do Aplicativo", "Sistema Operacional", 1)); // Substitua com os valores apropriados
-    JButton deleteButton = new JButton("Excluir Aplicativo");
-    deleteButton.addActionListener(e -> excluirAplicativo(aplicativoTable));
-    JButton saveButton = new JButton("Salvar Alterações");
-    saveButton.addActionListener(e -> salvarAlteracoesAplicativos());
-
-    JPanel buttonsPanel = new JPanel();
-    buttonsPanel.add(addButton);
-    buttonsPanel.add(deleteButton);
-    buttonsPanel.add(saveButton);
-    panel.add(buttonsPanel, BorderLayout.SOUTH);
-
-    return panel;
-}
-
-    private void adicionarAplicativo(String nome, String sistemaOperacional, int idAssinatura) {
-        int novoCodigo = listaAplicativos.size() + 1;
-        Aplicativo novoApp = new Aplicativo(novoCodigo, nome, sistemaOperacional, 0); // Valor mensal será atualizado
-        
-        double valorMensal = novoApp.calcularValorMensal(idAssinatura);
-        novoApp.setIdAssinatura(idAssinatura);
-        novoApp.setValorMensal(valorMensal);
-        
-        listaAplicativos.add(novoApp);
-        refreshAplicativoTable();
-    }
-    
     private void salvarAlteracoesAplicativos() {
         String diretorioAtual = System.getProperty("user.dir");
         String caminhoArquivoAplicativos = diretorioAtual + "/Aplicativos.txt";
@@ -260,6 +188,127 @@ private JPanel createAplicativoPanel() {
             JOptionPane.showMessageDialog(null, "Erro ao salvar alterações nos aplicativos.");
         }
     }
+
+    
+private void refreshClienteTable() {
+    JTable clienteTable = createClienteTable(listaClientes);
+    JScrollPane scrollPane = new JScrollPane(clienteTable);
+    atualizarTabela(scrollPane);
+}
+
+private void exibirErroAoSalvar(String tipo) {
+    JOptionPane.showMessageDialog(this, "Erro ao salvar alterações nos " + tipo + ".");
+}
+
+    
+    private JTable createClienteTable(List<Cliente> listaClientes) {
+        String[] columnNames = {"CPF", "Nome", "Email"};
+        Object[][] data = new Object[listaClientes.size()][columnNames.length];
+    
+        for (int i = 0; i < listaClientes.size(); i++) {
+            Cliente cliente = listaClientes.get(i);
+            data[i][0] = cliente.getCpf();
+            data[i][1] = cliente.getNome();
+            data[i][2] = cliente.getEmail();
+        }
+    
+        return new JTable(data, columnNames);
+    }
+    
+    private JPanel createAplicativoPanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+        JTable aplicativoTable = createAplicativoTable(listaAplicativos);
+        JScrollPane scrollPane = new JScrollPane(aplicativoTable);
+        panel.add(scrollPane, BorderLayout.CENTER);
+    
+        JButton addButton = new JButton("Adicionar Aplicativo");
+        addButton.addActionListener(e -> adicionarAplicativo("Novo Aplicativo", "Sistema Operacional", 0.0)); // Valores padrão
+        JButton deleteButton = new JButton("Excluir Aplicativo");
+        deleteButton.addActionListener(e -> excluirAplicativo(aplicativoTable));
+        JButton saveButton = new JButton("Salvar Alterações");
+        saveButton.addActionListener(e -> {
+            salvarAlteracoesAplicativos();
+            JOptionPane.showMessageDialog(this, "Alterações nos aplicativos salvas com sucesso!");
+            refreshAplicativoTable(); // Atualiza a tabela de aplicativos após salvar as alterações
+        });
+    
+        JPanel buttonsPanel = new JPanel();
+        buttonsPanel.add(addButton);
+        buttonsPanel.add(deleteButton);
+        buttonsPanel.add(saveButton);
+        panel.add(buttonsPanel, BorderLayout.SOUTH);
+    
+        return panel;
+    }
+
+    private void adicionarAplicativo(String nome, String sistemaOperacional, double valorMensal) {
+        AddAplicativoDialog dialog = new AddAplicativoDialog(this, listaAplicativos);
+        dialog.setVisible(true); // Mostra a janela de cadastro
+    
+        // Atualiza a tabela apenas se um novo aplicativo foi adicionado
+        refreshAplicativoTable();
+    }
+    
+    
+    
+    public class AddAplicativoDialog extends JDialog {
+        private JTextField nomeField;
+        private JTextField sistemaOperacionalField;
+        private JTextField valorMensalField;
+        private List<Aplicativo> listaAplicativos;
+        private boolean aplicativoAdicionado = false;
+    
+        public boolean isAplicativoAdicionado() {
+            return aplicativoAdicionado;
+        }
+    
+        public AddAplicativoDialog(Frame owner, List<Aplicativo> listaAplicativos) {
+            super(owner, "Adicionar Aplicativo", true);
+            this.listaAplicativos = listaAplicativos;
+    
+            JPanel panel = new JPanel(new GridLayout(4, 2));
+    
+            panel.add(new JLabel("Nome:"));
+            nomeField = new JTextField();
+            panel.add(nomeField);
+    
+            panel.add(new JLabel("Sistema Operacional:"));
+            sistemaOperacionalField = new JTextField();
+            panel.add(sistemaOperacionalField);
+    
+            panel.add(new JLabel("Valor Mensal:"));
+            valorMensalField = new JTextField();
+            panel.add(valorMensalField);
+    
+            JButton salvarButton = new JButton("Salvar");
+            salvarButton.addActionListener(this::salvarNovoAplicativo);
+            panel.add(salvarButton);
+    
+            JButton cancelarButton = new JButton("Cancelar");
+            cancelarButton.addActionListener(e -> dispose());
+            panel.add(cancelarButton);
+    
+            add(panel);
+            pack();
+            setLocationRelativeTo(owner);
+        }
+    
+        private void salvarNovoAplicativo(ActionEvent e) {
+            String nome = nomeField.getText();
+            String sistemaOperacional = sistemaOperacionalField.getText();
+            double valorMensal = Double.parseDouble(valorMensalField.getText());
+    
+            if (!nome.isEmpty() && !sistemaOperacional.isEmpty()) {
+                Aplicativo novoApp = new Aplicativo(listaAplicativos.size() + 1, nome, sistemaOperacional, valorMensal);
+                listaAplicativos.add(novoApp);
+                aplicativoAdicionado = true; // Define como true quando um novo aplicativo é adicionado
+                dispose(); // Fecha a janela de cadastro
+            } else {
+                JOptionPane.showMessageDialog(this, "Preencha todos os campos corretamente.");
+            }
+        }
+    }
+
     
     private void excluirAplicativo(JTable aplicativoTable) {
         int selectedRow = aplicativoTable.getSelectedRow();
@@ -272,17 +321,16 @@ private JPanel createAplicativoPanel() {
     private void refreshAplicativoTable() {
         JTable aplicativoTable = createAplicativoTable(listaAplicativos);
         JScrollPane scrollPane = new JScrollPane(aplicativoTable);
-        Component[] components = ((Container) getContentPane().getLayout()).getComponents();
-        for (Component component : components) {
-            if (component instanceof JScrollPane) {
-                getContentPane().remove(component);
-                getContentPane().add(scrollPane, BorderLayout.CENTER);
-                revalidate();
-                repaint();
-                break;
-            }
-        }
-    }    
+        atualizarTabela(scrollPane);
+    }
+    
+    private void atualizarTabela(Component novaTabela) {
+        getContentPane().removeAll();
+        getContentPane().add(novaTabela, BorderLayout.CENTER);
+        revalidate();
+        repaint();
+    }
+    
     private JTable createAplicativoTable(List<Aplicativo> aplicativos) {
         String[] columnNames = {"Codigo", "Nome", "Sistema Operacional", "Valor Mensal"};
         Object[][] data = new Object[aplicativos.size()][columnNames.length];
@@ -300,7 +348,7 @@ private JPanel createAplicativoPanel() {
     
     private <T> List<T> carregarDados(String caminhoArquivo, DataExtractor<T> extractor) {
         List<T> dados = new ArrayList<>();
-
+    
         try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
             String linha;
             while ((linha = br.readLine()) != null) {
@@ -312,16 +360,13 @@ private JPanel createAplicativoPanel() {
         } catch (IOException | NumberFormatException e) {
             e.printStackTrace();
         }
-
+    
         return dados;
     }
-
+    
     private interface DataExtractor<T> {
         T extractData(String linha);
     }
-
-
-
 private List<Assinatura> carregarAssinaturas(String caminhoArquivoAssinatura, List<Aplicativo> aplicativos, List<Cliente> clientes) {
     List<Assinatura> assinaturas = new ArrayList<>();
     
