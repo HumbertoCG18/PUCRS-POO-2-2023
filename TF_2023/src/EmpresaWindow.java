@@ -59,7 +59,7 @@ public class EmpresaWindow extends JFrame {
         addButton.addActionListener(e -> adicionarCliente());
         JButton deleteButton = new JButton("Excluir Cliente");
         deleteButton.addActionListener(e -> excluirCliente(clienteTable));
-        JButton saveButton = new JButton("Salvar Alterações");
+        JButton saveButton = new JButton("Salvar Alteracoes");
         saveButton.addActionListener(e -> {
             salvarAlteracoes();
             JOptionPane.showMessageDialog(this, "Alterações nos clientes salvas com sucesso!");
@@ -85,7 +85,7 @@ public class EmpresaWindow extends JFrame {
         addButton.addActionListener(e -> adicionarAplicativo("Novo Aplicativo", "Sistema Operacional", 0.0)); // Valores padrão
         JButton deleteButton = new JButton("Excluir Aplicativo");
         deleteButton.addActionListener(e -> excluirAplicativo(aplicativoTable));
-        JButton saveButton = new JButton("Salvar Alterações");
+        JButton saveButton = new JButton("Salvar Alteracoes");
         saveButton.addActionListener(e -> {
             salvarAlteracoesAplicativos();
             JOptionPane.showMessageDialog(this, "Alterações nos aplicativos salvas com sucesso!");
@@ -177,7 +177,7 @@ public class EmpresaWindow extends JFrame {
             for (Cliente cliente : listaClientes) {
                 writer.println(cliente.getCpf() + ";" + cliente.getNome() + ";" + cliente.getEmail());
             }
-            JOptionPane.showMessageDialog(this, "Alterações nos clientes salvas com sucesso!");
+            JOptionPane.showMessageDialog(this, "Alteracoes nos clientes salvas com sucesso!");
         } catch (IOException e) {
             exibirErroAoSalvar("clientes");
         }
@@ -204,10 +204,10 @@ public class EmpresaWindow extends JFrame {
                         aplicativo.getSistemaOperacional(),
                         aplicativo.getValorMensal()));
             }
-            JOptionPane.showMessageDialog(null, "Alterações nos aplicativos salvas com sucesso!");
+            JOptionPane.showMessageDialog(null, "Alteracoes nos aplicativos salvas com sucesso!");
         } catch (IOException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Erro ao salvar alterações nos aplicativos.");
+            JOptionPane.showMessageDialog(null, "Erro ao salvar alteracoes nos aplicativos.");
         }
     }
 
@@ -219,7 +219,7 @@ public class EmpresaWindow extends JFrame {
     }
 
     private void exibirErroAoSalvar(String tipo) {
-        JOptionPane.showMessageDialog(this, "Erro ao salvar alterações nos " + tipo + ".");
+        JOptionPane.showMessageDialog(this, "Erro ao salvar alteracoes nos " + tipo + ".");
     }
 
     
@@ -350,7 +350,7 @@ public class EmpresaWindow extends JFrame {
             String linha;
             while ((linha = br.readLine()) != null) {
                 String[] partes = linha.split(";");
-                if (partes.length >= 5 && partes[0].equalsIgnoreCase(email)) {
+                if (partes.length >= 4 && partes[0].equalsIgnoreCase(email)) {
                     cnpj = partes[3].trim();
                     nome = partes[2].trim();
                     break;  // Encontrou a empresa, pode sair do loop

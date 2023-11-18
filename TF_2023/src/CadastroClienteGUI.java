@@ -72,11 +72,11 @@ public class CadastroClienteGUI extends JFrame {
 
     private void cadastrarNoArquivo(String cpf, String nome, String email, String senha) {
     String diretorioAtual = System.getProperty("user.dir");
-    File caminhoArquivoCliente = new File(diretorioAtual + "/Cliente.txt");
+    File caminhoArquivoCliente = new File(diretorioAtual + "/src/Cliente.txt");
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminhoArquivoCliente, true))) {
             // Formato: CPF;Nome;Email;Senha
-            writer.write(cpf + ";" + nome + ";" + email + ";" + senha);
+            writer.write(email + ";" + senha + ";" + nome + ";" + cpf);
             writer.newLine();  // Adiciona uma nova linha para o próximo cadastro
         } catch (IOException e) {
             e.printStackTrace();

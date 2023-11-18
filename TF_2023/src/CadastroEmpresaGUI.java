@@ -75,7 +75,7 @@ public class CadastroEmpresaGUI extends JFrame {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminhoArquivo, true))) {
             // Formato: CNPJ;Nome;Email;Senha
-            writer.write(cnpj + ";" + nome + ";" + email + ";" + senha);
+            writer.write(email + ";" + senha + ";" + nome + ";" + cnpj);
             writer.newLine();  // Adiciona uma nova linha para o próximo cadastro
         } catch (IOException e) {
             e.printStackTrace();
