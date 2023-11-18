@@ -228,9 +228,9 @@ public class EmpresaWindow extends JFrame {
     
         for (int i = 0; i < listaClientes.size(); i++) {
             Cliente cliente = listaClientes.get(i);
-            data[i][0] = cliente.getCpf();
+            data[i][2] = cliente.getCpf();
             data[i][1] = cliente.getNome();
-            data[i][2] = cliente.getEmail();
+            data[i][0] = cliente.getEmail();
         }
     
         return new JTable(data, columnNames);
@@ -339,28 +339,6 @@ public class EmpresaWindow extends JFrame {
         return new JTable(data, columnNames);
     }
     
-    private <T> List<T> carregarDados(String caminhoArquivo, DataExtractor<T> extractor) {
-        List<T> dados = new ArrayList<>();
-    
-        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
-            String linha;
-            while ((linha = br.readLine()) != null) {
-                T dado = extractor.extractData(linha);
-                if (dado != null) {
-                    dados.add(dado);
-                }
-            }
-        } catch (IOException | NumberFormatException e) {
-            e.printStackTrace();
-        }
-    
-        return dados;
-    }
-    
-    private interface DataExtractor<T> {
-        T extractData(String linha);
-    }
-
 
     private void carregarInformacoesEmpresa() {
         // Obter o diretório atual
@@ -398,10 +376,33 @@ public class EmpresaWindow extends JFrame {
         // Carregar informações das assinaturas
     }
     
+        private <T> List<T> carregarDados(String caminhoArquivo, DataExtractor<T> extractor) {
+        List<T> dados = new ArrayList<>();
+    
+        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
+            String linha;
+            while ((linha = br.readLine()) != null) {
+                T dado = extractor.extractData(linha);
+                if (dado != null) {
+                    dados.add(dado);
+                }
+            }
+        } catch (IOException | NumberFormatException e) {
+            e.printStackTrace();
+        }
+    
+        return dados;
+    }
+    
+    private interface DataExtractor<T> {
+        T extractData(String linha);
+    }
+
+
     private List<Cliente> carregarClientes(String caminhoArquivoCliente) {
         return carregarDados(caminhoArquivoCliente, linha -> {
             String[] partes = linha.split(";");
-            return (partes.length >= 3) ? new Cliente(partes[0].trim(), partes[1].trim(), partes[2].trim()) : null;
+            return (partes.length >= 3) ? new Cliente(partes[0].trim(), partes[2].trim(), partes[3].trim()) : null;
         });
     }
 
