@@ -1,9 +1,14 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import java.awt.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Vector;
 
 public class ClienteWindow extends JFrame {
     private String email;
@@ -11,218 +16,222 @@ public class ClienteWindow extends JFrame {
     private String nome;
     private List<Cliente> listaClientes;
     private List<Aplicativo> listaAplicativos;
-    private List<Assinatura> listaAssinaturas;
+    private List<Aplicativo> aplicativosInstalados;
 
-    public ClienteWindow(String email, List<Aplicativo> listaAplicativos, List<Assinatura> listaAssinaturas, List<Cliente> listaClientes) {
+    public ClienteWindow(String email, List<Aplicativo> listaAplicativos, List<Cliente> listaClientes) {
         this.email = email;
         this.listaClientes = listaClientes;
         this.listaAplicativos = listaAplicativos;
-        this.listaAssinaturas = listaAssinaturas;
-        carregarInformacoesCliente(); 
-        carregarInformacoesCliente(); // Carregar informações do cliente logado
+        this.aplicativosInstalados = new ArrayList<>();
+    
+        carregarInformacoesCliente();
 
-        setTitle("Janela da Empresa/Desenvolvedor");        setSize(800, 600);
+        setTitle("Janela do Cliente");
+        setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JTabbedPane tabbedPane = new JTabbedPane();
-        JPanel infoPanel = createInfoPanel();
-        JPanel aplicativoPanel = createAplicativoPanel();
-        JPanel assinaturaPanel = createAssinaturaPanel();
-
-        tabbedPane.addTab("Informações", infoPanel);
-        tabbedPane.addTab("Visualizar Aplicativos", aplicativoPanel);
-        tabbedPane.addTab("Visualizar Assinaturas", assinaturaPanel);
+        tabbedPane.addTab("Informacoes", createInfoPanel());
+        tabbedPane.addTab("Aplicativos Disponíveis", createAplicativosDisponiveisPanel());
+        tabbedPane.addTab("Aplicativos Instalados", createAplicativosInstaladosPanel());
 
         add(tabbedPane, BorderLayout.CENTER);
     }
 
-    
     private JPanel createInfoPanel() {
         JPanel panel = new JPanel(new GridLayout(3, 2));
-
         panel.add(new JLabel("CPF:"));
         panel.add(new JLabel(cpf));
-
         panel.add(new JLabel("Nome:"));
         panel.add(new JLabel(nome));
-
         panel.add(new JLabel("Email:"));
         panel.add(new JLabel(email));
-
         return panel;
     }
 
-    private JPanel createAplicativoPanel() {
+    private JPanel createAplicativosDisponiveisPanel() {
         JPanel panel = new JPanel(new BorderLayout());
-
-        Cliente clienteAtual = null;
-        for (Cliente cliente : listaClientes) {
-            if (cliente.getEmail().equalsIgnoreCase(email)) {
-                clienteAtual = cliente;
-                break;
-            }
-        }
-
-        if (clienteAtual != null) {
-            Map<Integer, Aplicativo> aplicativosCliente = clienteAtual.getAplicativos();
-            JTable aplicativoTable = createAplicativoTable(new ArrayList<>(aplicativosCliente.values()));
-            JScrollPane scrollPane = new JScrollPane(aplicativoTable);
-            panel.add(scrollPane, BorderLayout.CENTER);
-        } else {
-            JLabel noAppsLabel = new JLabel("Nenhum aplicativo vinculado a este cliente.");
-            panel.add(noAppsLabel, BorderLayout.CENTER);
-        }
-
-        JPanel buttonsPanel = new JPanel();
-        panel.add(buttonsPanel, BorderLayout.SOUTH);
-
-        return panel;
-    }
-
-private JTable createAplicativoTable(List<Aplicativo> aplicativos) {
-    String[] columnNames = {"Código", "Nome", "Sistema Operacional", "Valor Mensal", "ID Assinatura"};
-    Object[][] data = new Object[aplicativos.size()][columnNames.length];
-
-    for (int i = 0; i < aplicativos.size(); i++) {
-        Aplicativo aplicativo = aplicativos.get(i);
-        data[i][0] = aplicativo.getCodigo();
-        data[i][1] = aplicativo.getNome();
-        data[i][2] = aplicativo.getSistemaOperacional();
-        data[i][3] = aplicativo.getValorMensal();
-        data[i][4] = aplicativo.getIdAssinatura();
-    }
-
-    return new JTable(data, columnNames);
-}
-
-
-    private JPanel createAssinaturaPanel() {
-        JPanel panel = new JPanel(new BorderLayout());
-        JTable assinaturaTable = createAssinaturaTable(listaAssinaturas);
-        JScrollPane scrollPane = new JScrollPane(assinaturaTable);
+        JTable aplicativosTable = createAplicativosTable();
+        JScrollPane scrollPane = new JScrollPane(aplicativosTable);
         panel.add(scrollPane, BorderLayout.CENTER);
+        return panel;
+    }
 
-        JPanel buttonPanel = new JPanel();
+    private JTable createAplicativosTable() {
+        String[] columnNames = {"ID", "Nome", "Sistema Operacional", "Valor Mensal", "Instalar"};
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0) {
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                return columnIndex == 4 ? Boolean.class : super.getColumnClass(columnIndex);
+            }
 
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column == 4;
+            }
+        };
+
+        for (Aplicativo app : listaAplicativos) {
+            Vector<Object> row = new Vector<>();
+            row.add(app.getCodigo());
+            row.add(app.getNome());
+            row.add(app.getSistemaOperacional());
+            row.add(app.getValorMensal());
+            row.add(false);
+            model.addRow(row);
+        }
+
+        JTable table = new JTable(model);
+        table.getTableHeader().setReorderingAllowed(false);
+
+        JButton salvarButton = new JButton("Salvar");
+        salvarButton.addActionListener(e -> salvarAplicativos(table.getModel()));
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        buttonPanel.add(salvarButton);
+
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(new JScrollPane(table), BorderLayout.CENTER);
         panel.add(buttonPanel, BorderLayout.SOUTH);
 
-        return panel;
+        return table;
     }
 
-    private List<Assinatura> carregarAssinaturas(String caminhoArquivoAssinatura, List<Aplicativo> aplicativos, List<Cliente> clientes) {
-        List<Assinatura> assinaturas = new ArrayList<>();
-
-        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivoAssinatura))) {
-            String linha;
-            while ((linha = br.readLine()) != null) {
-                String[] partes = linha.split(";");
-                if (partes.length >= 6) {
-                    int codigoAplicativo = Integer.parseInt(partes[1].trim());
-                    String cpfCliente = partes[2].trim();
-
-                    // Encontrando o aplicativo correspondente ao código
-                    Aplicativo aplicativo = buscarAplicativoPorCodigo(aplicativos, codigoAplicativo);
-                    // Encontrando o cliente correspondente ao CPF
-                    Cliente cliente = buscarClientePorCPF(clientes, cpfCliente);
-
-                    if (aplicativo != null && cliente != null) {
-                        double valorMensal = aplicativo.calcularValorMensal(Integer.parseInt(partes[5].trim()));
-
-                        Assinatura assinatura = new Assinatura(
-                                Integer.parseInt(partes[0].trim()),
-                                codigoAplicativo,
-                                cpfCliente,
-                                partes[3].trim(),
-                                partes[4].trim(),
-                                valorMensal // Define o valor mensal com base no ID da assinatura
-                        );
-                        assinatura.setNomeAplicativo(aplicativo.getNome());
-                        assinatura.setNomeCliente(cliente.getNome());
-                        assinaturas.add(assinatura);
-                    }
+    private void salvarAplicativos(TableModel model) {
+        for (int i = 0; i < model.getRowCount(); i++) {
+            boolean instalar = (boolean) model.getValueAt(i, 4);
+            if (instalar) {
+                int codigo = (int) model.getValueAt(i, 0);
+                Aplicativo app = findAplicativoByCodigo(codigo);
+                if (app != null) {
+                    aplicativosInstalados.add(app);
                 }
             }
-        } catch (IOException | NumberFormatException e) {
-            e.printStackTrace();
         }
-
-        return assinaturas;
+        JOptionPane.showMessageDialog(this, "Aplicativos instalados salvos com sucesso!");
     }
-    
-    private Aplicativo buscarAplicativoPorCodigo(List<Aplicativo> aplicativos, int codigo) {
-        for (Aplicativo app : aplicativos) {
+
+
+    private Aplicativo findAplicativoByCodigo(int codigo) {
+        for (Aplicativo app : listaAplicativos) {
             if (app.getCodigo() == codigo) {
                 return app;
             }
         }
         return null;
     }
-    
-    private Cliente buscarClientePorCPF(List<Cliente> clientes, String cpf) {
-        for (Cliente cliente : clientes) {
-            if (cliente.getCpf().equals(cpf)) {
-                return cliente;
-            }
-        }
-        return null;
-    }
-    
-    private JTable createAssinaturaTable(List<Assinatura> assinaturas) {
-        String[] columnNames = {"Código", "Código Aplicativo", "Nome Aplicativo", "CPF Cliente", "Nome Cliente", "Início Vigência", "Fim Vigência", "Valor Mensal"};
-        Object[][] data = new Object[assinaturas.size()][columnNames.length];
-    
-        for (int i = 0; i < assinaturas.size(); i++) {
-            Assinatura assinatura = assinaturas.get(i);
-            data[i][0] = assinatura.getCodigo();
-            data[i][1] = assinatura.getCodigoAplicativo();
-            data[i][2] = assinatura.getNomeAplicativo();
-            data[i][3] = assinatura.getCpfCliente();
-            data[i][4] = assinatura.getNomeCliente();
-            data[i][5] = assinatura.getInicioVigencia();
-            data[i][6] = assinatura.getFimVigencia();
-            data[i][7] = assinatura.getValorMensal();
-        }
-    
-        return new JTable(data, columnNames);
+
+    private JPanel createAplicativosInstaladosPanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+        JTable aplicativosInstaladosTable = createAplicativosInstaladosTable();
+        JScrollPane scrollPane = new JScrollPane(aplicativosInstaladosTable);
+        panel.add(scrollPane, BorderLayout.CENTER);
+        panel.add(new JLabel("Preço total por mês: "), BorderLayout.SOUTH);
+        return panel;
     }
 
+    private JTable createAplicativosInstaladosTable() {
+        String[] columnNames = {"Nome", "Sistema Operacional", "Valor Mensal"};
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
-    private void carregarInformacoesCliente() {
+        for (Aplicativo app : aplicativosInstalados) {
+            Vector<Object> row = new Vector<>();
+            row.add(app.getNome());
+            row.add(app.getSistemaOperacional());
+            row.add(app.getValorMensal());
+            model.addRow(row);
+        }
+
+        return new JTable(model);
+    }
+
+    private List<Aplicativo> carregarAplicativos() {
+        List<Aplicativo> aplicativos = new ArrayList<>();
         String diretorioAtual = System.getProperty("user.dir");
-        File caminhoArquivoCliente = new File(diretorioAtual + "/Cliente.txt");
-
-        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivoCliente))) {
+        File caminhoArquivoAplicativos = new File(diretorioAtual + "/Aplicativos.txt");
+    
+        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivoAplicativos))) {
             String linha;
             while ((linha = br.readLine()) != null) {
                 String[] partes = linha.split(";");
-                if (partes.length >= 5 && partes[0].equalsIgnoreCase(email)) {
-                    cpf = partes[3].trim(); // Considerando que o CNPJ está na posição 3
-                    nome = partes[2].trim(); // Considerando que o nome está na posição 1
-                    break;  // Encontrou o cliente, pode sair do loop
+                if (partes.length >= 5) {
+                    int codigo = Integer.parseInt(partes[0].trim());
+                    String nome = partes[1].trim();
+                    String sistemaOperacional = partes[2].trim();
+                    double valorMensal = Double.parseDouble(partes[3].trim());
+                    int idAssinatura = Integer.parseInt(partes[4].trim());
+    
+                    Aplicativo app = new Aplicativo(codigo, nome, sistemaOperacional, valorMensal);
+                    app.setIdAssinatura(idAssinatura);
+                    aplicativos.add(app);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    
+        return aplicativos;
+    }
+
+    private void carregarInformacoesCliente() {
+        String diretorioAtual = System.getProperty("user.dir");
+        File caminhoArquivoClientes = new File(diretorioAtual + "/Cliente.txt");
+    
+        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivoClientes))) {
+            String linha;
+            while ((linha = br.readLine()) != null) {
+                String[] partes = linha.split(";");
+                if (partes.length >= 4 && partes[0].equalsIgnoreCase(email)) {
+                    nome = partes[2].trim();
+                    cpf = partes[3].trim();
+                    break; // Encontrou o cliente, pode sair do loop
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    
+        // Se não encontrou o cliente, atribuir valores padrão
+        if (cpf == null || nome == null) {
+            cpf = "CPF não encontrado";
+            nome = "Nome não encontrado";
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            List<Cliente> listaClientes = carregarListaClientes(); // Carregar a lista de clientes
+            List<Aplicativo> listaAplicativos = new ArrayList<>();
+    
+            ClienteWindow clienteWindow = new ClienteWindow("cliente@example.com", listaAplicativos, listaClientes);
+            listaAplicativos = clienteWindow.carregarAplicativos(); // Carregar a lista de aplicativos
+    
+            clienteWindow.setVisible(true);
+        });
+    }
+
+    // Método para carregar a lista de clientes a partir do arquivo
+    private static List<Cliente> carregarListaClientes() {
+        List<Cliente> listaClientes = new ArrayList<>();
+        String diretorioAtual = System.getProperty("user.dir");
+        File caminhoArquivoClientes = new File(diretorioAtual + "/Cliente.txt");
+
+        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivoClientes))) {
+            String linha;
+            while ((linha = br.readLine()) != null) {
+                String[] partes = linha.split(";");
+                if (partes.length >= 3) {
+                    String email = partes[0].trim();
+                    String nome = partes[1].trim();
+                    String cpf = partes[2].trim();
+
+                    Cliente cliente = new Cliente(email, nome, cpf);
+                    listaClientes.add(cliente);
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        // Se não encontrou o cliente, atribuir valores padrão
-        if (cpf == null || nome == null) {
-            cpf = "CNPJ não encontrado";
-            nome = "Nome não encontrado";
-        }
-
-        String caminhoArquivoAssinatura = diretorioAtual + "/Assinaturas.txt";
-        listaAssinaturas = carregarAssinaturas(caminhoArquivoAssinatura, listaAplicativos, listaClientes);
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            // Suponha que você tenha listas de clientes, aplicativos e assinaturas
-            List<Cliente> listaClientes = new ArrayList<>();
-            List<Aplicativo> listaAplicativos = new ArrayList<>();
-            List<Assinatura> listaAssinaturas = new ArrayList<>();
-
-            new ClienteWindow("empresa@example.com", listaAplicativos, listaAssinaturas, listaClientes).setVisible(true);
-        });
+        return listaClientes;
     }
 }

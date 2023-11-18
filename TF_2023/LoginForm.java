@@ -141,9 +141,9 @@ public class LoginForm extends JFrame {
         if (tipoUsuario.equalsIgnoreCase("cliente")) {
             List<Cliente> listaClientes = new ArrayList<>();
             List<Aplicativo> listaAplicativos = new ArrayList<>();
-            List<Assinatura> listaAssinaturas = new ArrayList<>();
+
             SwingUtilities.invokeLater(() -> {
-                ClienteWindow clienteWindow = new ClienteWindow(usuario, listaAplicativos, listaAssinaturas, listaClientes);
+                ClienteWindow clienteWindow = new ClienteWindow(usuario, listaAplicativos, listaClientes);
                 clienteWindow.setVisible(true);
                 dispose(); // Fechar a tela de login
             });
@@ -151,10 +151,10 @@ public class LoginForm extends JFrame {
             // Se você tiver uma lista de clientes, aplicativos e assinaturas para passar para a EmpresaWindow
             List<Cliente> listaClientes = new ArrayList<>();
             List<Aplicativo> listaAplicativos = new ArrayList<>();
-            List<Assinatura> listaAssinaturas = new ArrayList<>();
+
 
             SwingUtilities.invokeLater(() -> {
-                EmpresaWindow empresaWindow = new EmpresaWindow(usuario, listaClientes, listaAplicativos, listaAssinaturas);
+                EmpresaWindow empresaWindow = new EmpresaWindow(usuario, listaClientes, listaAplicativos);
                 empresaWindow.setVisible(true);
                 dispose(); // Fechar a tela de login
             });
