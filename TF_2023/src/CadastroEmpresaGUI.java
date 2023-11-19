@@ -17,7 +17,7 @@ public class CadastroEmpresaGUI extends JFrame {
     public CadastroEmpresaGUI() {
         setTitle("Cadastro de Empresa");
         setSize(300, 200);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(5, 2));
@@ -61,6 +61,7 @@ public class CadastroEmpresaGUI extends JFrame {
             cadastrarNoArquivo(cnpj, nome, email, new String(senha));
             JOptionPane.showMessageDialog(this, "Empresa cadastrada com sucesso!");
             limparCampos();
+            dispose();
         }
     }
 

@@ -28,7 +28,7 @@ public class EmpresaWindow extends JFrame {
 
         setTitle("Janela da Empresa/Desenvolvedor");
         setSize(800, 600);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);;
 
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.addTab("Informacoes", createInfoPanel());

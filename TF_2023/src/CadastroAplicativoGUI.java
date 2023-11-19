@@ -14,7 +14,7 @@ public class CadastroAplicativoGUI extends JFrame {
     public CadastroAplicativoGUI() {
         setTitle("Cadastro de Aplicativo");
         setSize(300, 250);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(6, 2));
@@ -82,6 +82,7 @@ public class CadastroAplicativoGUI extends JFrame {
             }
 
             limparCampos();
+            dispose();
 
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Erro ao cadastrar/editar aplicativo. Verifique os dados informados.");
