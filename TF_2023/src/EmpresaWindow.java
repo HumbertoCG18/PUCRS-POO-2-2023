@@ -85,9 +85,9 @@ public class EmpresaWindow extends JFrame {
         JButton deleteButton = new JButton("Excluir Cliente");
         deleteButton.addActionListener(e -> abrirRemoverCliente());
     
-        refreshClienteTable();
         JPanel buttonsPanel = new JPanel();
         buttonsPanel.add(addButton);
+        deleteButton.addActionListener(e ->  refreshClienteTable(clienteTable));
         buttonsPanel.add(deleteButton);
         panel.add(buttonsPanel, BorderLayout.SOUTH);
 
@@ -132,7 +132,7 @@ public class EmpresaWindow extends JFrame {
     }
 
     
-    private void refreshClienteTable() {
+    private void refreshClienteTable(JTable clienteTable2) {
         JTable clienteTable = createClienteTable(listaClientes);
         JScrollPane scrollPane = new JScrollPane(clienteTable);
         atualizarTabela(scrollPane);

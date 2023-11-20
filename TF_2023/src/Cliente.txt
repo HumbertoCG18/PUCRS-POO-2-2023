@@ -1,1 +1,3 @@
 roberto@gmail.com;123456;Roberto;123.456.789-00;1,2
+joana@gmail.com;123456;Joana;123.456.789.00
+adalberto@gmail.com;123456;Adalberto;123.456.789-00
