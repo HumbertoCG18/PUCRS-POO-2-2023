@@ -82,7 +82,9 @@
             }
 
             public static void salvarAplicativosEmArquivo(List<Aplicativo> aplicativos, String caminhoArquivoAplicativo) {
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminhoArquivoAplicativo))) {
+                String diretorioAtual = System.getProperty("user.dir");
+                String caminhoArquivoAplicativos = diretorioAtual + "/TF_2023/src/Aplicativos.txt";
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminhoArquivoAplicativos))) {
                     for (Aplicativo aplicativo : aplicativos) {
                         writer.write(String.format("%d;%s;%s;%.2f;%d%n",
                                 aplicativo.getCodigo(),
@@ -100,20 +102,21 @@
 
             public static void main(String[] args) {
                 List<Aplicativo> aplicativos = new ArrayList<>();
+                String diretorioAtual = System.getProperty("user.dir");
 
                 Aplicativo app1 = new Aplicativo(1, "App1", "Android", 1, 9.90);
                 app1.setIdAssinatura(1); // Assinatura básica
 
-                Aplicativo app2 = new Aplicativo(2, "App2", "iOS", 2, 9.90);
+                Aplicativo app2 = new Aplicativo(2, "App2", "iOS", 2, 18.90);
                 app2.setIdAssinatura(2); // Assinatura VIP
 
-                Aplicativo app3 = new Aplicativo(3, "App3", "Windows",3, 9.90);
+                Aplicativo app3 = new Aplicativo(3, "App3", "Windows",3, 29.90);
                 app3.setIdAssinatura(3); // Assinatura Premium
 
                 aplicativos.add(app1);
                 aplicativos.add(app2);
                 aplicativos.add(app3);
 
-                salvarAplicativosEmArquivo(aplicativos, "Aplicativos.txt");
+                salvarAplicativosEmArquivo(aplicativos, diretorioAtual + "/TF_2023/src/Aplicativos.txt");
             }
         }

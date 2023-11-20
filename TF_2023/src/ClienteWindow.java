@@ -1,13 +1,18 @@
 package src;
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 public class ClienteWindow extends JFrame {
@@ -93,24 +98,39 @@ public class ClienteWindow extends JFrame {
         return panel;
     }
     
-    private JTable createAplicativosInstaladosTable() {
-        String[] columnNames = {"Nome", "Sistema Operacional", "Valor Mensal", "Assinatura"};
-        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
-    
-        for (Aplicativo app : aplicativosInstalados) {
-            Vector<Object> row = new Vector<>();
-            row.add(app.getNome());
-            row.add(app.getSistemaOperacional());
-            row.add(app.getValorMensal());
-    
-            JComboBox<String> assinaturaComboBox = new JComboBox<>(new String[]{"Básica", "VIP", "Premium"});
-            row.add(assinaturaComboBox);
-    
-            model.addRow(row);
-        }
-    
-        return new JTable(model);
+private JTable createAplicativosInstaladosTable() {
+    String[] columnNames = {"Nome", "Sistema Operacional", "Valor Mensal", "Assinatura"};
+    DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+
+    Map<Integer, String> mapAssinaturas = new HashMap<>();
+    mapAssinaturas.put(1, "Básica");
+    mapAssinaturas.put(2, "VIP");
+    mapAssinaturas.put(3, "Premium");
+
+    for (Aplicativo app : aplicativosInstalados) {
+        Vector<Object> row = new Vector<>();
+        row.add(app.getNome());
+        row.add(app.getSistemaOperacional());
+        row.add(app.getValorMensal());
+
+        int idAssinatura = app.getIdAssinatura();
+        String nomeAssinatura = mapAssinaturas.getOrDefault(idAssinatura, "Desconhecida");
+        row.add(nomeAssinatura);
+
+        model.addRow(row);
     }
+
+    JTable table = new JTable(model);
+    TableColumn assinaturaColumn = table.getColumnModel().getColumn(3);
+    DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+    renderer.setToolTipText("Clique para escolher a assinatura");
+    assinaturaColumn.setCellRenderer(renderer);
+
+    JComboBox<String> assinaturaComboBox = new JComboBox<>(new String[]{"Básica", "VIP", "Premium"});
+    assinaturaColumn.setCellEditor(new DefaultCellEditor(assinaturaComboBox));
+
+    return table;
+}
     
     private void removerAplicativoSelecionado(JTable table) {
         int selectedRow = table.getSelectedRow();

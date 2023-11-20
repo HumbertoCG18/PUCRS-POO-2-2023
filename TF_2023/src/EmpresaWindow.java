@@ -421,42 +421,42 @@ public class EmpresaWindow extends JFrame {
         });
     }
 
-    private List<Aplicativo> carregarAplicativos(String caminhoArquivoAplicativo) {
-        return carregarDados(caminhoArquivoAplicativo, linha -> {
-            String[] partes = linha.split(";");
-            if (partes.length >= 4) {
-                int codigo = Integer.parseInt(partes[0].trim());
-                String nome = partes[1].trim();
-                String sistemaOperacional = partes[2].trim();
-    
-                // Convertendo a string do preço para um double
-                double valorMensal = Double.parseDouble(partes[3].replace(',', '.'));
-    
-                // Obtendo o último caractere para identificar a assinatura
-                char idAssinaturaChar = partes[3].charAt(partes[3].length() - 1);
-                int idAssinatura;
-    
-                // Mapeando o último caractere para o ID da assinatura
-                switch (idAssinaturaChar) {
-                    case '0':
-                        idAssinatura = 1; // Assinatura Básica
-                        break;
-                    case '1':
-                        idAssinatura = 2; // Assinatura VIP
-                        break;
-                    case '2':
-                        idAssinatura = 3; // Assinatura Premium
-                        break;
-                    default:
-                        idAssinatura = 1; // Se não corresponder a nenhum dos caracteres esperados, atribui o valor padrão
-                        break;
-                }
-    
-                return new Aplicativo(codigo, nome, sistemaOperacional, idAssinatura, valorMensal);
+private List<Aplicativo> carregarAplicativos(String caminhoArquivoAplicativo) {
+    return carregarDados(caminhoArquivoAplicativo, linha -> {
+        String[] partes = linha.split(";");
+        if (partes.length >= 4) {
+            int codigo = Integer.parseInt(partes[0].trim());
+            String nome = partes[1].trim();
+            String sistemaOperacional = partes[2].trim();
+
+            // Convertendo a string do preço para um double
+            double valorMensal = Double.parseDouble(partes[3].replace(',', '.'));
+
+            // Obtendo o último caractere para identificar a assinatura
+            char idAssinaturaChar = partes[3].charAt(partes[3].length() - 1);
+            int idAssinatura;
+
+            // Mapeando o último caractere para o ID da assinatura
+            switch (idAssinaturaChar) {
+                case '0':
+                    idAssinatura = 1; // Assinatura Básica
+                    break;
+                case '1':
+                    idAssinatura = 2; // Assinatura VIP
+                    break;
+                case '2':
+                    idAssinatura = 3; // Assinatura Premium
+                    break;
+                default:
+                    idAssinatura = 1; // Se não corresponder a nenhum dos caracteres esperados, atribui o valor padrão
+                    break;
             }
-            return null;
-        });
-    }
+
+            return new Aplicativo(codigo, nome, sistemaOperacional, idAssinatura, valorMensal);
+        }
+        return null;
+    });
+}
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
