@@ -103,7 +103,7 @@ public class EmpresaWindow extends JFrame {
         });
     }
 
-            private void abrirRemoverAplicativo() {
+        private void abrirRemoverAplicativo() {
         SwingUtilities.invokeLater(() -> {
             RemoverAplicativoGUI removerAplicativoGUI = new RemoverAplicativoGUI(listaAplicativos);
             removerAplicativoGUI.setVisible(true);

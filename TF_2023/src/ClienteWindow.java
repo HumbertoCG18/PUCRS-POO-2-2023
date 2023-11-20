@@ -1,4 +1,4 @@
-package src;
+    package src;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -19,12 +19,13 @@ public class ClienteWindow extends JFrame {
     private String email;
     private String cpf;
     private String nome;
-
+    private List<Cliente> listaClientes;
     private List<Aplicativo> listaAplicativos;
     private List<Aplicativo> aplicativosInstalados;
 
-    public ClienteWindow(String email, List<Aplicativo> listaAplicativos) {
+    public ClienteWindow(String email, List<Aplicativo> listaAplicativos,List<Cliente> listaClientes) {
         this.email = email;
+        this.listaClientes = listaClientes;
         this.listaAplicativos = listaAplicativos;
         this.aplicativosInstalados = new ArrayList<>();
     
@@ -85,23 +86,29 @@ public class ClienteWindow extends JFrame {
         return new JTable(data, columnNames);
     }
 
+    private void abrirRemoverAplicativoInstalado() {
+        SwingUtilities.invokeLater(() -> {
+            RemoverAplicativoInstaladoGUI removerAplicativoInstaladoGUI = new RemoverAplicativoInstaladoGUI(listaClientes);
+            removerAplicativoInstaladoGUI.setVisible(true);
+        });
+    }
 
     private JPanel createAplicativosInstaladosPanel() {
         JPanel panel = new JPanel(new BorderLayout());
-        JTable aplicativosInstaladosTable = createAplicativosInstaladosTable();
+        JTable aplicativosInstaladosTable = createAplicativosInstaladosTable(aplicativosInstalados);
         JScrollPane scrollPane = new JScrollPane(aplicativosInstaladosTable);
         panel.add(scrollPane, BorderLayout.CENTER);
     
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton removeButton = new JButton("Remover Aplicativo");
-        removeButton.addActionListener(e -> removerAplicativoSelecionado(aplicativosInstaladosTable));
+        removeButton.addActionListener(e ->  abrirRemoverAplicativoInstalado());
         bottomPanel.add(removeButton);
     
         panel.add(bottomPanel, BorderLayout.SOUTH);
         return panel;
     }
     
-private JTable createAplicativosInstaladosTable() {
+    private JTable createAplicativosInstaladosTable(List<Aplicativo> aplicativosInstalados) {
     String[] columnNames = {"Nome", "Sistema Operacional", "Valor Mensal", "Assinatura"};
     DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
@@ -131,13 +138,6 @@ private JTable createAplicativosInstaladosTable() {
 
     return table;
 }
-    
-    private void removerAplicativoSelecionado(JTable table) {
-        int selectedRow = table.getSelectedRow();
-        if (selectedRow >= 0) {
-            ((DefaultTableModel) table.getModel()).removeRow(selectedRow);
-        }
-    }
 
 
     private void carregarInformacoesCliente() {
@@ -213,7 +213,7 @@ private JTable createAplicativosInstaladosTable() {
         T extractData(String linha);
     }
 
-    private List<Aplicativo> carregarAplicativos(String caminhoArquivoAplicativo) {
+    private List<Aplicativo>carregarAplicativos(String caminhoArquivoAplicativo) {
         return carregarDados(caminhoArquivoAplicativo, linha -> {
             String[] partes = linha.split(";");
             if (partes.length >= 4) {
@@ -246,18 +246,6 @@ private JTable createAplicativosInstaladosTable() {
                 return new Aplicativo(codigo, nome, sistemaOperacional, idAssinatura, valorMensal);
             }
             return null;
-        });
-    }
-    
-
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-        List<Aplicativo> listaAplicativos = new ArrayList<>();
-    
-            ClienteWindow clienteWindow = new ClienteWindow("cliente@example.com", listaAplicativos);
-    
-            clienteWindow.setVisible(true);
         });
     }
 }
