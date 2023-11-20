@@ -62,6 +62,13 @@ public class EmpresaWindow extends JFrame {
         return panel;
     }
 
+    private void abrirCadastroCliente() {
+        SwingUtilities.invokeLater(() -> {
+            CadastroClienteGUI cadastroClienteGUI = new CadastroClienteGUI();
+            cadastroClienteGUI.setVisible(true);
+        });
+    }
+
     private JPanel createClientePanel() {
         JPanel panel = new JPanel(new BorderLayout());
         JTable clienteTable = createClienteTable(listaClientes);
@@ -70,7 +77,7 @@ public class EmpresaWindow extends JFrame {
     
         // Botões para adicionar, excluir e salvar clientes
         JButton addButton = new JButton("Adicionar Cliente");
-        addButton.addActionListener(e -> adicionarCliente());
+        addButton.addActionListener(e -> abrirCadastroCliente());
         JButton deleteButton = new JButton("Excluir Cliente");
         deleteButton.addActionListener(e -> excluirCliente(clienteTable));
         JButton saveButton = new JButton("Salvar Alteracoes");
@@ -89,76 +96,6 @@ public class EmpresaWindow extends JFrame {
         return panel;
     }
 
-    public class AddClienteDialog extends JDialog {
-        private JTextField cpfField;
-        private JTextField nomeField;
-        private JTextField emailField;
-        private JTextField  senhaField;
-        private List<Cliente> listaClientes;
-        private boolean clienteAdicionado = false;
-
-        public boolean isClienteAdicionado() {
-            return clienteAdicionado;
-        }
-    
-        public AddClienteDialog(Frame owner, List<Cliente> listaClientes) {
-            super(owner, "Adicionar Cliente", true);
-            this.listaClientes = listaClientes;
-    
-            JPanel panel = new JPanel(new GridLayout(4, 2));
-    
-            panel.add(new JLabel("CPF:"));
-            cpfField = new JTextField();
-            panel.add(cpfField);
-    
-            panel.add(new JLabel("Nome:"));
-            nomeField = new JTextField();
-            panel.add(nomeField);
-    
-            panel.add(new JLabel("Email:"));
-            emailField = new JTextField();
-            panel.add(emailField);
-
-            panel.add(new JLabel("Senha:"));
-            senhaField = new JTextField();
-            panel.add(senhaField);
-    
-            JButton salvarButton = new JButton("Salvar");
-            salvarButton.addActionListener(this::salvarNovoCliente);
-            panel.add(salvarButton);
-    
-            JButton cancelarButton = new JButton("Cancelar");
-            cancelarButton.addActionListener(e -> dispose());
-            panel.add(cancelarButton);
-    
-            add(panel);
-            pack();
-            setLocationRelativeTo(owner);
-        }
-    
-        private void salvarNovoCliente(ActionEvent e) {
-            String cpf = cpfField.getText();
-            String nome = nomeField.getText();
-            String email = emailField.getText();
-    
-            if (!cpf.isEmpty() && !nome.isEmpty() && !email.isEmpty()) {
-                Cliente novoCliente = new Cliente(email, nome, cpf);
-                listaClientes.add(novoCliente);
-                clienteAdicionado = true; // Define como true quando um novo cliente é adicionado
-                dispose(); // Fecha a janela de cadastro
-            } else {
-                JOptionPane.showMessageDialog(this, "Preencha todos os campos.");
-            }
-        }
-    }
-    // Métodos para adicionar, excluir e salvar dados
-    private void adicionarCliente() {
-        AddClienteDialog dialog = new AddClienteDialog(this, listaClientes);
-        dialog.setVisible(true); // Mostra a janela de cadastro
-    
-        // Atualiza a tabela apenas se um novo cliente foi adicionado
-        refreshClienteTable();
-    }
 
 
     private void salvarAlteracoes() {
@@ -183,7 +120,14 @@ public class EmpresaWindow extends JFrame {
         }
     }
 
-    
+        private void abrirCadastroAplicativo() {
+        SwingUtilities.invokeLater(() -> {
+            CadastroAplicativoGUI cadastroAplicativoGUI = new CadastroAplicativoGUI(listaAplicativos);
+            cadastroAplicativoGUI.setVisible(true);
+        });
+    }
+
+
      private JPanel createAplicativoPanel() {
         JPanel panel = new JPanel(new BorderLayout());
         JTable aplicativoTable = createAplicativoTable(listaAplicativos);
@@ -191,7 +135,7 @@ public class EmpresaWindow extends JFrame {
         panel.add(scrollPane, BorderLayout.CENTER);
     
         JButton addButton = new JButton("Adicionar Aplicativo");
-        addButton.addActionListener(e -> adicionarAplicativo("Novo Aplicativo", "Sistema Operacional", 0.0)); // Valores padrão
+            addButton.addActionListener(e -> abrirCadastroAplicativo());
         JButton deleteButton = new JButton("Excluir Aplicativo");
         deleteButton.addActionListener(e -> excluirAplicativo(aplicativoTable));
         JButton saveButton = new JButton("Salvar Alteracoes");
@@ -314,17 +258,6 @@ public class EmpresaWindow extends JFrame {
             }
         }
 
-    
-    private void adicionarAplicativo(String nome, String sistemaOperacional, double valorMensal) {
-        AddAplicativoDialog dialog = new AddAplicativoDialog(this, listaAplicativos);
-        dialog.setVisible(true); // Mostra a janela de cadastro
-    
-        // Atualiza a tabela apenas se um novo aplicativo foi adicionado
-        refreshAplicativoTable();
-    }
-    
-
-    
     private void excluirAplicativo(JTable aplicativoTable) {
         int selectedRow = aplicativoTable.getSelectedRow();
         if (selectedRow >= 0) {

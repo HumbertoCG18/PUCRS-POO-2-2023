@@ -1,8 +1,5 @@
 import javax.swing.*;
-
 import src.CadastroEmpresaGUI;
-
-
 import src.Aplicativo;
 import src.CadastroClienteGUI;
 import src.Cliente;

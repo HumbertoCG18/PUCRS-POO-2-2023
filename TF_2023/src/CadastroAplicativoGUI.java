@@ -34,7 +34,7 @@ public class CadastroAplicativoGUI extends JFrame {
         panel.add(valorMensalField);
 
         panel.add(new JLabel("Assinatura:"));
-        assinaturaComboBox = new JComboBox<>(new String[]{"Básica", "VIP", "Premium"});
+        assinaturaComboBox = new JComboBox<>(new String[]{"Basico", "VIP", "Premium"});
         panel.add(assinaturaComboBox);
 
         JButton salvarButton = new JButton("Salvar");
