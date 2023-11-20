@@ -93,6 +93,7 @@ public class EmpresaWindow extends JFrame {
         private JTextField cpfField;
         private JTextField nomeField;
         private JTextField emailField;
+        private JTextField  senhaField;
         private List<Cliente> listaClientes;
         private boolean clienteAdicionado = false;
 
@@ -117,6 +118,10 @@ public class EmpresaWindow extends JFrame {
             panel.add(new JLabel("Email:"));
             emailField = new JTextField();
             panel.add(emailField);
+
+            panel.add(new JLabel("Senha:"));
+            senhaField = new JTextField();
+            panel.add(senhaField);
     
             JButton salvarButton = new JButton("Salvar");
             salvarButton.addActionListener(this::salvarNovoCliente);
@@ -137,7 +142,7 @@ public class EmpresaWindow extends JFrame {
             String email = emailField.getText();
     
             if (!cpf.isEmpty() && !nome.isEmpty() && !email.isEmpty()) {
-                Cliente novoCliente = new Cliente(cpf, nome, email);
+                Cliente novoCliente = new Cliente(email, nome, cpf);
                 listaClientes.add(novoCliente);
                 clienteAdicionado = true; // Define como true quando um novo cliente é adicionado
                 dispose(); // Fecha a janela de cadastro
@@ -342,7 +347,7 @@ public class EmpresaWindow extends JFrame {
     }
     
     private JTable createAplicativoTable(List<Aplicativo> aplicativos) {
-        String[] columnNames = {"Codigo", "Nome", "Sistema Operacional", "Faturamento"};
+        String[] columnNames = {"Codigo", "Nome", "Sistema Operacional", "Assinatura", "Faturamento"};
         Object[][] data = new Object[aplicativos.size()][columnNames.length];
     
         for (int i = 0; i < aplicativos.size(); i++) {
@@ -350,7 +355,8 @@ public class EmpresaWindow extends JFrame {
             data[i][0] = aplicativo.getCodigo();
             data[i][1] = aplicativo.getNome();
             data[i][2] = aplicativo.getSistemaOperacional();
-            data[i][3] = aplicativo.getValorMensal();
+            data[i][3] = aplicativo.getIdAssinatura();
+            data[i][4] = aplicativo.getValorMensal();
         }
     
         return new JTable(data, columnNames);
@@ -417,7 +423,7 @@ public class EmpresaWindow extends JFrame {
     private List<Cliente> carregarClientes(String caminhoArquivoCliente) {
         return carregarDados(caminhoArquivoCliente, linha -> {
             String[] partes = linha.split(";");
-            return (partes.length >= 3) ? new Cliente(partes[0].trim(), partes[2].trim(), partes[3].trim()) : null;
+            return (partes.length >= 4) ? new Cliente(partes[0].trim(), partes[2].trim(), partes[3].trim()) : null;
         });
     }
 
@@ -428,13 +434,12 @@ private List<Aplicativo> carregarAplicativos(String caminhoArquivoAplicativo) {
             int codigo = Integer.parseInt(partes[0].trim());
             String nome = partes[1].trim();
             String sistemaOperacional = partes[2].trim();
-
+            int idAssinatura = Integer.parseInt(partes[3].trim());
             // Convertendo a string do preço para um double
-            double valorMensal = Double.parseDouble(partes[3].replace(',', '.'));
+            double valorMensal = Double.parseDouble(partes[4].replace(',', '.'));
 
             // Obtendo o último caractere para identificar a assinatura
-            char idAssinaturaChar = partes[3].charAt(partes[3].length() - 1);
-            int idAssinatura;
+            char idAssinaturaChar = partes[4].charAt(partes[3].length() - 1);
 
             // Mapeando o último caractere para o ID da assinatura
             switch (idAssinaturaChar) {

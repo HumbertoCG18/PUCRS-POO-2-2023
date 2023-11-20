@@ -49,7 +49,6 @@ public class CadastroAplicativoGUI extends JFrame {
         String nome = nomeField.getText();
         String sistemaOperacional = sistemaOperacionalField.getText();
         double valorMensal = Double.parseDouble(valorMensalField.getText());
-
         int idAssinatura = assinaturaComboBox.getSelectedIndex() + 1; // IDs são de 1 a 3
 
         if (!nome.isEmpty() && !sistemaOperacional.isEmpty()) {

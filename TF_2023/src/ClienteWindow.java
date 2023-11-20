@@ -68,7 +68,7 @@ public class ClienteWindow extends JFrame {
 
     
     private JTable createAplicativoTable(List<Aplicativo> aplicativos) {
-        String[] columnNames = {"Codigo", "Nome", "Sistema Operacional", "Valor Mensal"};
+        String[] columnNames = {"Codigo", "Nome", "Sistema Operacional", "ID Assinatura","Valor Mensal"};
         Object[][] data = new Object[aplicativos.size()][columnNames.length];
     
         for (int i = 0; i < aplicativos.size(); i++) {
@@ -76,8 +76,11 @@ public class ClienteWindow extends JFrame {
             data[i][0] = aplicativo.getCodigo();
             data[i][1] = aplicativo.getNome();
             data[i][2] = aplicativo.getSistemaOperacional();
-            data[i][3] = aplicativo.getValorMensal();
+            data[i][3] = aplicativo.getIdAssinatura();
+            data[i][4] = aplicativo.getValorMensal();
         }
+
+        
     
         return new JTable(data, columnNames);
     }
@@ -103,7 +106,7 @@ private JTable createAplicativosInstaladosTable() {
     DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
     Map<Integer, String> mapAssinaturas = new HashMap<>();
-    mapAssinaturas.put(1, "Básica");
+    mapAssinaturas.put(1, "Basica");
     mapAssinaturas.put(2, "VIP");
     mapAssinaturas.put(3, "Premium");
 
@@ -112,8 +115,8 @@ private JTable createAplicativosInstaladosTable() {
         row.add(app.getNome());
         row.add(app.getSistemaOperacional());
         row.add(app.getValorMensal());
-
         int idAssinatura = app.getIdAssinatura();
+        
         String nomeAssinatura = mapAssinaturas.getOrDefault(idAssinatura, "Desconhecida");
         row.add(nomeAssinatura);
 
@@ -125,9 +128,6 @@ private JTable createAplicativosInstaladosTable() {
     DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
     renderer.setToolTipText("Clique para escolher a assinatura");
     assinaturaColumn.setCellRenderer(renderer);
-
-    JComboBox<String> assinaturaComboBox = new JComboBox<>(new String[]{"Básica", "VIP", "Premium"});
-    assinaturaColumn.setCellEditor(new DefaultCellEditor(assinaturaComboBox));
 
     return table;
 }
@@ -220,14 +220,30 @@ private JTable createAplicativosInstaladosTable() {
                 int codigo = Integer.parseInt(partes[0].trim());
                 String nome = partes[1].trim();
                 String sistemaOperacional = partes[2].trim();
+                int idAssinatura = Integer.parseInt(partes[3].trim());
+                // Convertendo a string do preço para um double
+                double valorMensal = Double.parseDouble(partes[4].replace(',', ','));
     
-                String[] valores = partes[3].split(",");
-                if (valores.length >= 2) {
-                    int idAssinatura = Integer.parseInt(valores[0].trim());
-                    double valorMensal = Double.parseDouble(valores[1].trim());
+                // Obtendo o último caractere para identificar a assinatura
+                char idAssinaturaChar = partes[4].charAt(partes[3].length() - 1);
     
-                    return new Aplicativo(codigo, nome, sistemaOperacional, idAssinatura, valorMensal);
+                // Mapeando o último caractere para o ID da assinatura
+                switch (idAssinaturaChar) {
+                    case '0':
+                        idAssinatura = 1; // Assinatura Básica
+                        break;
+                    case '1':
+                        idAssinatura = 2; // Assinatura VIP
+                        break;
+                    case '2':
+                        idAssinatura = 3; // Assinatura Premium
+                        break;
+                    default:
+                        idAssinatura = 1; // Se não corresponder a nenhum dos caracteres esperados, atribui o valor padrão
+                        break;
                 }
+    
+                return new Aplicativo(codigo, nome, sistemaOperacional, idAssinatura, valorMensal);
             }
             return null;
         });

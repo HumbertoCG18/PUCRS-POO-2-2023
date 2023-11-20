@@ -19,8 +19,8 @@
                 this.codigo = codigo;
                 this.nomeAplicativo = nome;
                 this.sistemaOperacional = sistemaOperacional;
-                this.valorMensal = valorMensal;
                 this.idAssinatura = idAssinatura;
+                this.valorMensal = valorMensal;
             }
 
 
@@ -86,20 +86,19 @@
                 String caminhoArquivoAplicativos = diretorioAtual + "/TF_2023/src/Aplicativos.txt";
                 try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminhoArquivoAplicativos))) {
                     for (Aplicativo aplicativo : aplicativos) {
-                        writer.write(String.format("%d;%s;%s;%.2f;%d%n",
+                        writer.write(String.format("%d;%s;%s;%d%n%.f;",
                                 aplicativo.getCodigo(),
                                 aplicativo.getNome(),
                                 aplicativo.getSistemaOperacional(),
-                                aplicativo.getValorMensal(),
-                                aplicativo.getIdAssinatura()));
+                                aplicativo.getIdAssinatura(),
+                                aplicativo.getValorMensal()));
                     }
                     System.out.println("Aplicativos salvos com sucesso!");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-            
-
+        
             public static void main(String[] args) {
                 List<Aplicativo> aplicativos = new ArrayList<>();
                 String diretorioAtual = System.getProperty("user.dir");
