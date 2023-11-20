@@ -18,6 +18,7 @@ public class EmpresaWindow extends JFrame {
     private String nome;
     private List<Cliente> listaClientes;
     private List<Aplicativo> listaAplicativos;
+    public JTabbedPane assinaturaComboBox;
 
     // Construtor que aceita parâmetros
     public EmpresaWindow(String email, List<Cliente> listaClientes, List<Aplicativo> listaAplicativos) {
@@ -26,25 +27,38 @@ public class EmpresaWindow extends JFrame {
         this.listaAplicativos = listaAplicativos;
         carregarInformacoesEmpresa();
 
-        setTitle("Janela da Empresa/Desenvolvedor");
+        setTitle("Janela do desenvolvedor");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);;
 
         JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.addTab("Informacoes", createInfoPanel());
+        tabbedPane.addTab("Informacoes da Empresa", createInfoEmpresaPanel());
+        tabbedPane.addTab("Suas Informacoes", createInfoPanel());
         tabbedPane.addTab("Visualizar Clientes", createClientePanel());
         tabbedPane.addTab("Visualizar Aplicativos", createAplicativoPanel());
 
         add(tabbedPane, BorderLayout.CENTER);
     }
+
+    
     private JPanel createInfoPanel() {
         JPanel panel = new JPanel(new GridLayout(3, 2));
         panel.add(new JLabel("CNPJ:"));
         panel.add(new JLabel(cnpj));
-        panel.add(new JLabel("Nome:"));
+        panel.add(new JLabel("Nome Funcionario:"));
         panel.add(new JLabel(nome));
-        panel.add(new JLabel("Email:"));
+        panel.add(new JLabel("Email Funcionario:"));
         panel.add(new JLabel(email));
+        return panel;
+    }
+    
+    private JPanel createInfoEmpresaPanel() {
+        JPanel panel = new JPanel(new GridLayout(3, 2));
+
+        panel.add(new JLabel("CNPJ da Empresa: 86.573.972/0001-90"));
+        panel.add(new JLabel("Nome da empresa: PUCRS"));
+        panel.add(new JLabel("Email da Empresa: pucrs@gmail.com"));
+
         return panel;
     }
 
@@ -75,34 +89,6 @@ public class EmpresaWindow extends JFrame {
         return panel;
     }
 
-     private JPanel createAplicativoPanel() {
-        JPanel panel = new JPanel(new BorderLayout());
-        JTable aplicativoTable = createAplicativoTable(listaAplicativos);
-        JScrollPane scrollPane = new JScrollPane(aplicativoTable);
-        panel.add(scrollPane, BorderLayout.CENTER);
-    
-        JButton addButton = new JButton("Adicionar Aplicativo");
-        addButton.addActionListener(e -> adicionarAplicativo("Novo Aplicativo", "Sistema Operacional", 0.0)); // Valores padrão
-        JButton deleteButton = new JButton("Excluir Aplicativo");
-        deleteButton.addActionListener(e -> excluirAplicativo(aplicativoTable));
-        JButton saveButton = new JButton("Salvar Alteracoes");
-        saveButton.addActionListener(e -> {
-            salvarAlteracoesAplicativos();
-            JOptionPane.showMessageDialog(this, "Alterações nos aplicativos salvas com sucesso!");
-            refreshAplicativoTable(); // Atualiza a tabela de aplicativos após salvar as alterações
-        });
-    
-        JPanel buttonsPanel = new JPanel();
-        buttonsPanel.add(addButton);
-        buttonsPanel.add(deleteButton);
-        buttonsPanel.add(saveButton);
-        panel.add(buttonsPanel, BorderLayout.SOUTH);
-    
-        return panel;
-    }
-
-     
-    
     public class AddClienteDialog extends JDialog {
         private JTextField cpfField;
         private JTextField nomeField;
@@ -192,6 +178,33 @@ public class EmpresaWindow extends JFrame {
         }
     }
 
+    
+     private JPanel createAplicativoPanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+        JTable aplicativoTable = createAplicativoTable(listaAplicativos);
+        JScrollPane scrollPane = new JScrollPane(aplicativoTable);
+        panel.add(scrollPane, BorderLayout.CENTER);
+    
+        JButton addButton = new JButton("Adicionar Aplicativo");
+        addButton.addActionListener(e -> adicionarAplicativo("Novo Aplicativo", "Sistema Operacional", 0.0)); // Valores padrão
+        JButton deleteButton = new JButton("Excluir Aplicativo");
+        deleteButton.addActionListener(e -> excluirAplicativo(aplicativoTable));
+        JButton saveButton = new JButton("Salvar Alteracoes");
+        saveButton.addActionListener(e -> {
+            salvarAlteracoesAplicativos();
+            JOptionPane.showMessageDialog(this, "Alterações nos aplicativos salvas com sucesso!");
+            refreshAplicativoTable(); // Atualiza a tabela de aplicativos após salvar as alterações
+        });
+    
+        JPanel buttonsPanel = new JPanel();
+        buttonsPanel.add(addButton);
+        buttonsPanel.add(deleteButton);
+        buttonsPanel.add(saveButton);
+        panel.add(buttonsPanel, BorderLayout.SOUTH);
+    
+        return panel;
+    }
+
     private void salvarAlteracoesAplicativos() {
         String diretorioAtual = System.getProperty("user.dir");
         String caminhoArquivoAplicativos = diretorioAtual + "/src/Aplicativos.txt";
@@ -236,15 +249,7 @@ public class EmpresaWindow extends JFrame {
     
         return new JTable(data, columnNames);
     }
-    
-    private void adicionarAplicativo(String nome, String sistemaOperacional, double valorMensal) {
-        AddAplicativoDialog dialog = new AddAplicativoDialog(this, listaAplicativos);
-        dialog.setVisible(true); // Mostra a janela de cadastro
-    
-        // Atualiza a tabela apenas se um novo aplicativo foi adicionado
-        refreshAplicativoTable();
-    }
-    
+
     public class AddAplicativoDialog extends JDialog {
         private JTextField nomeField;
         private JTextField sistemaOperacionalField;
@@ -287,21 +292,32 @@ public class EmpresaWindow extends JFrame {
             setLocationRelativeTo(owner);
         }
     
-    private void salvarNovoAplicativo(ActionEvent e) {
-            String nome = nomeField.getText();
-            String sistemaOperacional = sistemaOperacionalField.getText();
-            double valorMensal = Double.parseDouble(valorMensalField.getText());
-    
-            if (!nome.isEmpty() && !sistemaOperacional.isEmpty()) {
-                Aplicativo novoApp = new Aplicativo(listaAplicativos.size() + 1, nome, sistemaOperacional, valorMensal);
-                listaAplicativos.add(novoApp);
-                aplicativoAdicionado = true; // Define como true quando um novo aplicativo é adicionado
-                dispose(); // Fecha a janela de cadastro
-            } else {
-                JOptionPane.showMessageDialog(this, "Preencha todos os campos corretamente.");
+        private void salvarNovoAplicativo(ActionEvent e) {  
+                String nome = nomeField.getText();
+                String sistemaOperacional = sistemaOperacionalField.getText();
+                double valorMensal = Double.parseDouble(valorMensalField.getText());
+                int idAssinatura = assinaturaComboBox.getSelectedIndex() + 1;
+        
+                if (!nome.isEmpty() && !sistemaOperacional.isEmpty()) {
+                    Aplicativo novoApp = new Aplicativo(listaAplicativos.size() + 1, nome, sistemaOperacional, idAssinatura, valorMensal);
+                    listaAplicativos.add(novoApp);
+                    aplicativoAdicionado = true; // Define como true quando um novo aplicativo é adicionado
+                    dispose(); // Fecha a janela de cadastro
+                } else {
+                    JOptionPane.showMessageDialog(this, "Preencha todos os campos corretamente.");
+                }
             }
         }
+
+    
+    private void adicionarAplicativo(String nome, String sistemaOperacional, double valorMensal) {
+        AddAplicativoDialog dialog = new AddAplicativoDialog(this, listaAplicativos);
+        dialog.setVisible(true); // Mostra a janela de cadastro
+    
+        // Atualiza a tabela apenas se um novo aplicativo foi adicionado
+        refreshAplicativoTable();
     }
+    
 
     
     private void excluirAplicativo(JTable aplicativoTable) {
@@ -326,7 +342,7 @@ public class EmpresaWindow extends JFrame {
     }
     
     private JTable createAplicativoTable(List<Aplicativo> aplicativos) {
-        String[] columnNames = {"Codigo", "Nome", "Sistema Operacional", "Valor Mensal"};
+        String[] columnNames = {"Codigo", "Nome", "Sistema Operacional", "Faturamento"};
         Object[][] data = new Object[aplicativos.size()][columnNames.length];
     
         for (int i = 0; i < aplicativos.size(); i++) {
@@ -408,10 +424,39 @@ public class EmpresaWindow extends JFrame {
     private List<Aplicativo> carregarAplicativos(String caminhoArquivoAplicativo) {
         return carregarDados(caminhoArquivoAplicativo, linha -> {
             String[] partes = linha.split(";");
-            return (partes.length >= 4) ? new Aplicativo(Integer.parseInt(partes[0].trim()), partes[1].trim(), partes[2].trim(), Double.parseDouble(partes[3].trim())) : null;
+            if (partes.length >= 4) {
+                int codigo = Integer.parseInt(partes[0].trim());
+                String nome = partes[1].trim();
+                String sistemaOperacional = partes[2].trim();
+    
+                // Convertendo a string do preço para um double
+                double valorMensal = Double.parseDouble(partes[3].replace(',', '.'));
+    
+                // Obtendo o último caractere para identificar a assinatura
+                char idAssinaturaChar = partes[3].charAt(partes[3].length() - 1);
+                int idAssinatura;
+    
+                // Mapeando o último caractere para o ID da assinatura
+                switch (idAssinaturaChar) {
+                    case '0':
+                        idAssinatura = 1; // Assinatura Básica
+                        break;
+                    case '1':
+                        idAssinatura = 2; // Assinatura VIP
+                        break;
+                    case '2':
+                        idAssinatura = 3; // Assinatura Premium
+                        break;
+                    default:
+                        idAssinatura = 1; // Se não corresponder a nenhum dos caracteres esperados, atribui o valor padrão
+                        break;
+                }
+    
+                return new Aplicativo(codigo, nome, sistemaOperacional, idAssinatura, valorMensal);
+            }
+            return null;
         });
     }
-
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {

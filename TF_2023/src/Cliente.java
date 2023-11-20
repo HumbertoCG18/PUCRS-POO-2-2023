@@ -69,6 +69,33 @@ public class Cliente {
     public Map<Integer, Aplicativo> getAplicativos() {
         return aplicativos;
     }
+
+    public void instalarAplicativo(Aplicativo aplicativo) {
+        for (Map.Entry<Integer, Aplicativo> entry : aplicativos.entrySet()) {
+            if (entry.getValue().equals(aplicativo)) {
+                System.out.println("O aplicativo já está instalado para este cliente.");
+                return;
+            }
+        }
+        
+        // Encontra o próximo ID disponível
+        int nextId = aplicativos.isEmpty() ? 1 : aplicativos.size() + 1;
+        aplicativos.put(nextId, aplicativo);
+    }
+
+    public void desinstalarAplicativo(Aplicativo aplicativo) {
+        // Procura pelo aplicativo e remove-o se encontrado
+        for (Map.Entry<Integer, Aplicativo> entry : aplicativos.entrySet()) {
+            if (entry.getValue().equals(aplicativo)) {
+                aplicativos.remove(entry.getKey());
+                return;
+            }
+        }
+
+        System.out.println("O aplicativo não está instalado para este cliente.");
+    }
+
+
     public static List<Cliente> lerClientesDoArquivo(String caminhoArquivo, Map<Integer, Aplicativo> mapaAplicativos) {
         List<Cliente> clientes = new ArrayList<>();
     
@@ -89,7 +116,11 @@ public class Cliente {
                     for (String idAplicativo : idsAplicativos) {
                         int id = Integer.parseInt(idAplicativo.trim());
                         Aplicativo aplicativo = mapaAplicativos.get(id);
-                        cliente.vincularAplicativo(id, aplicativo);
+                        if (aplicativo != null) {
+                            cliente.vincularAplicativo(id, aplicativo);
+                        } else {
+                            System.out.println("Aplicativo com ID " + id + " não encontrado.");
+                        }
                     }
     
                     clientes.add(cliente);

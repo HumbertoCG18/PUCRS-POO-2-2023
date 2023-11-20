@@ -2,104 +2,70 @@ package src;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CadastroAplicativoGUI extends JFrame {
-    private JTextField codigoField;
     private JTextField nomeField;
-    private JTextField soField;
+    private JTextField sistemaOperacionalField;
+    private JTextField valorMensalField;
     private JComboBox<String> assinaturaComboBox;
-    private JButton cadastrarButton;
+    private List<Aplicativo> aplicativos;
 
-    public CadastroAplicativoGUI() {
-        setTitle("Cadastro de Aplicativo");
-        setSize(300, 250);
+    public CadastroAplicativoGUI(List<Aplicativo> aplicativos) {
+        this.aplicativos = aplicativos;
+
+        setTitle("Adicionar Aplicativo");
+        setSize(300, 200);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(6, 2));
-
-        panel.add(new JLabel("Código:"));
-        codigoField = new JTextField();
-        panel.add(codigoField);
+        JPanel panel = new JPanel(new GridLayout(5, 2));
 
         panel.add(new JLabel("Nome:"));
         nomeField = new JTextField();
         panel.add(nomeField);
 
         panel.add(new JLabel("Sistema Operacional:"));
-        soField = new JTextField();
-        panel.add(soField);
-
-        panel.add(new JLabel("Assinatura:"));
-        String[] assinaturas = {"Básica", "VIP", "Premium"};
-        assinaturaComboBox = new JComboBox<>(assinaturas);
-        panel.add(assinaturaComboBox);
+        sistemaOperacionalField = new JTextField();
+        panel.add(sistemaOperacionalField);
 
         panel.add(new JLabel("Valor Mensal:"));
-        JTextField valorMensalField = new JTextField();
-        valorMensalField.setEditable(false);
+        valorMensalField = new JTextField();
         panel.add(valorMensalField);
 
-        cadastrarButton = new JButton("Cadastrar");
-        cadastrarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cadastrarAplicativo(valorMensalField);
-            }
-        });
-        panel.add(cadastrarButton);
+        panel.add(new JLabel("Assinatura:"));
+        assinaturaComboBox = new JComboBox<>(new String[]{"Básica", "VIP", "Premium"});
+        panel.add(assinaturaComboBox);
 
-        // Adiciona um listener para alterar o valor mensal quando a assinatura é selecionada
-        assinaturaComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int idAssinatura = assinaturaComboBox.getSelectedIndex() + 1;
-                double valorMensal = Aplicativo.calcularValorMensalPeloCodigo(idAssinatura);
-                valorMensalField.setText(String.valueOf(valorMensal));
-            }
-        });
+        JButton salvarButton = new JButton("Salvar");
+        salvarButton.addActionListener(this::salvarNovoAplicativo);
+        panel.add(salvarButton);
 
         add(panel);
+        setLocationRelativeTo(null);
     }
 
-    private void cadastrarAplicativo(JTextField valorMensalField) {
-        try {
-            int codigo = Integer.parseInt(codigoField.getText());
-            String nome = nomeField.getText();
-            String so = soField.getText();
-            double valorMensal = Double.parseDouble(valorMensalField.getText());
+    private void salvarNovoAplicativo(ActionEvent e) {
+        String nome = nomeField.getText();
+        String sistemaOperacional = sistemaOperacionalField.getText();
+        double valorMensal = Double.parseDouble(valorMensalField.getText());
 
-            Aplicativo app = Aplicativo.getAplicativoPeloCodigo(codigo);
-            if (app != null) {
-                app.setNome(nome);
-                app.setSistemaOperacional(so);
-                app.setValorMensal(valorMensal);
+        int idAssinatura = assinaturaComboBox.getSelectedIndex() + 1; // IDs são de 1 a 3
 
-                JOptionPane.showMessageDialog(this, "Aplicativo editado com sucesso!");
-            } else {
-                JOptionPane.showMessageDialog(this, "Código de aplicativo não encontrado!");
-            }
-
-            limparCampos();
+        if (!nome.isEmpty() && !sistemaOperacional.isEmpty()) {
+            Aplicativo novoApp = new Aplicativo(aplicativos.size() + 1, nome, sistemaOperacional, idAssinatura, valorMensal);
+            aplicativos.add(novoApp);
+            Aplicativo.salvarAplicativosEmArquivo(aplicativos, "Aplicativos.txt");
             dispose();
-
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Erro ao cadastrar/editar aplicativo. Verifique os dados informados.");
+        } else {
+            JOptionPane.showMessageDialog(this, "Preencha todos os campos corretamente.");
         }
     }
 
-    private void limparCampos() {
-        codigoField.setText("");
-        nomeField.setText("");
-        soField.setText("");
-    }
-
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new CadastroAplicativoGUI().setVisible(true);
-            }
+        List<Aplicativo> aplicativos = new ArrayList<>();
+        SwingUtilities.invokeLater(() -> {
+            new CadastroAplicativoGUI(aplicativos).setVisible(true);
         });
     }
 }

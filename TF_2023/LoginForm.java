@@ -48,7 +48,7 @@ public class LoginForm extends JFrame {
         cadastrarClienteButton.addActionListener(e -> abrirCadastroCliente());
         panel.add(cadastrarClienteButton);
 
-        cadastrarEmpresaButton = new JButton("Cadastrar Empresa");
+        cadastrarEmpresaButton = new JButton("Cadastrar Funcionarios");
         cadastrarEmpresaButton.addActionListener(e -> abrirCadastroEmpresa());
         panel.add(cadastrarEmpresaButton);
 

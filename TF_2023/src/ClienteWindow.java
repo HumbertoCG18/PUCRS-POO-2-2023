@@ -14,6 +14,7 @@ public class ClienteWindow extends JFrame {
     private String email;
     private String cpf;
     private String nome;
+
     private List<Aplicativo> listaAplicativos;
     private List<Aplicativo> aplicativosInstalados;
 
@@ -82,23 +83,40 @@ public class ClienteWindow extends JFrame {
         JTable aplicativosInstaladosTable = createAplicativosInstaladosTable();
         JScrollPane scrollPane = new JScrollPane(aplicativosInstaladosTable);
         panel.add(scrollPane, BorderLayout.CENTER);
-        panel.add(new JLabel("Preco total por mes: "), BorderLayout.SOUTH);
+    
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JButton removeButton = new JButton("Remover Aplicativo");
+        removeButton.addActionListener(e -> removerAplicativoSelecionado(aplicativosInstaladosTable));
+        bottomPanel.add(removeButton);
+    
+        panel.add(bottomPanel, BorderLayout.SOUTH);
         return panel;
     }
-
+    
     private JTable createAplicativosInstaladosTable() {
-        String[] columnNames = {"Nome", "Sistema Operacional", "Valor Mensal"};
+        String[] columnNames = {"Nome", "Sistema Operacional", "Valor Mensal", "Assinatura"};
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
-
+    
         for (Aplicativo app : aplicativosInstalados) {
             Vector<Object> row = new Vector<>();
             row.add(app.getNome());
             row.add(app.getSistemaOperacional());
             row.add(app.getValorMensal());
+    
+            JComboBox<String> assinaturaComboBox = new JComboBox<>(new String[]{"Básica", "VIP", "Premium"});
+            row.add(assinaturaComboBox);
+    
             model.addRow(row);
         }
-
+    
         return new JTable(model);
+    }
+    
+    private void removerAplicativoSelecionado(JTable table) {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow >= 0) {
+            ((DefaultTableModel) table.getModel()).removeRow(selectedRow);
+        }
     }
 
 
@@ -113,6 +131,14 @@ public class ClienteWindow extends JFrame {
                 if (partes.length >= 4 && partes[0].equalsIgnoreCase(email)) {
                     nome = partes[2].trim();
                     cpf = partes[3].trim();
+                    String[] idsAplicativosString = partes[4].split(",");
+                    
+                    List<Integer> idsAplicativos = new ArrayList<>();
+                    for (String id : idsAplicativosString) {
+                        idsAplicativos.add(Integer.parseInt(id.trim()));
+                    }
+                    
+                    carregarAplicativosInstalados(idsAplicativos); // Carregar os aplicativos instalados pelo cliente
                     break; // Encontrou o cliente, pode sair do loop
                 }
             }
@@ -125,12 +151,23 @@ public class ClienteWindow extends JFrame {
             cpf = "CPF nao encontrado";
             nome = "Nome nao encontrado";
         }
-
-        // Carregar informações dos aplicativos
-        String caminhoArquivoAplicativo = diretorioAtual + "src/Aplicativos.txt";
+    }
+    
+    private void carregarAplicativosInstalados(List<Integer> idsAplicativos) {
+        String diretorioAtual = System.getProperty("user.dir");
+        String caminhoArquivoAplicativo = diretorioAtual + "/src/Aplicativos.txt";
+    
         listaAplicativos = carregarAplicativos(caminhoArquivoAplicativo);
-
-        
+    
+        aplicativosInstalados = new ArrayList<>();
+        for (Integer id : idsAplicativos) {
+            for (Aplicativo app : listaAplicativos) {
+                if (app.getCodigo() == id) {
+                    aplicativosInstalados.add(app);
+                    break;
+                }
+            }
+        }
     }
 
 
@@ -159,9 +196,23 @@ public class ClienteWindow extends JFrame {
     private List<Aplicativo> carregarAplicativos(String caminhoArquivoAplicativo) {
         return carregarDados(caminhoArquivoAplicativo, linha -> {
             String[] partes = linha.split(";");
-            return (partes.length >= 4) ? new Aplicativo(Integer.parseInt(partes[0].trim()), partes[1].trim(), partes[2].trim(), Double.parseDouble(partes[3].trim())) : null;
+            if (partes.length >= 4) {
+                int codigo = Integer.parseInt(partes[0].trim());
+                String nome = partes[1].trim();
+                String sistemaOperacional = partes[2].trim();
+    
+                String[] valores = partes[3].split(",");
+                if (valores.length >= 2) {
+                    int idAssinatura = Integer.parseInt(valores[0].trim());
+                    double valorMensal = Double.parseDouble(valores[1].trim());
+    
+                    return new Aplicativo(codigo, nome, sistemaOperacional, idAssinatura, valorMensal);
+                }
+            }
+            return null;
         });
     }
+    
 
 
     public static void main(String[] args) {
