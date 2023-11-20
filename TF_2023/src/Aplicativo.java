@@ -98,6 +98,26 @@
                     e.printStackTrace();
                 }
             }
+
+            public static void removerAplicativoDoArquivo(List<Aplicativo> aplicativos, int codigo, String caminhoArquivoAplicativo) {
+                String diretorioAtual = System.getProperty("user.dir");
+                String caminhoArquivoAplicativos = diretorioAtual + "/TF_2023/src/Aplicativos.txt";
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminhoArquivoAplicativos))) {
+                    for (Aplicativo aplicativo : aplicativos) {
+                        if (aplicativo.getCodigo() != codigo) {
+                            writer.write(String.format("%d;%s;%s;%d;%.2f%n",
+                                    aplicativo.getCodigo(),
+                                    aplicativo.getNome(),
+                                    aplicativo.getSistemaOperacional(),
+                                    aplicativo.getIdAssinatura(),
+                                    aplicativo.getValorMensal()));
+                        }
+                    }
+                    System.out.println("Aplicativo removido com sucesso!");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         
             public static void main(String[] args) {
                 List<Aplicativo> aplicativos = new ArrayList<>();

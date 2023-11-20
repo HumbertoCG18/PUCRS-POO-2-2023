@@ -28,8 +28,6 @@ public class Cliente {
         return cpf;
     }
     
-    
-
     public void setCpf(String cpf) {
         this.cpf = cpf;
     }
@@ -62,10 +60,6 @@ public class Cliente {
         aplicativos.put(idAplicativo, aplicativo);
     }
 
-    public void removerAplicativo(int idAplicativo) {
-        aplicativos.remove(idAplicativo);
-    }
-
     public Map<Integer, Aplicativo> getAplicativos() {
         return aplicativos;
     }
@@ -96,10 +90,12 @@ public class Cliente {
     }
 
 
-    public static List<Cliente> lerClientesDoArquivo(String caminhoArquivo, Map<Integer, Aplicativo> mapaAplicativos) {
+    public static List<Cliente> lerClientesDoArquivo(String caminhoArquivoCliente, Map<Integer, Aplicativo> mapaAplicativos) {
         List<Cliente> clientes = new ArrayList<>();
+        String diretorioAtual = System.getProperty("user.dir");
+        String caminhoArquivoClientes = diretorioAtual + "/TF_2023/src/Cliente.txt";
     
-        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivoClientes))) {
             String linha;
             while ((linha = br.readLine()) != null) {
                 String[] partes = linha.split(";");
@@ -134,8 +130,10 @@ public class Cliente {
     }
 
     
-    public static void escreverClientesNoArquivo(String caminhoArquivo, List<Cliente> clientes) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(caminhoArquivo))) {
+    public static void escreverClientesNoArquivo(String caminhoArquivoCliente, List<Cliente> clientes) {
+        String diretorioAtual = System.getProperty("user.dir");
+        String caminhoArquivoClientes = diretorioAtual + "/TF_2023/src/Cliente.txt";
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(caminhoArquivoClientes))) {
             for (Cliente cliente : clientes) {
                 StringBuilder sb = new StringBuilder();
                 sb.append(cliente.getEmail()).append(";")
@@ -154,6 +152,36 @@ public class Cliente {
                 sb.append("\n");
                 bw.write(sb.toString());
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void removerClienteDoArquivo(String caminhoArquivoCliente, List<Cliente> clientes, String cpfCliente) {
+        String diretorioAtual = System.getProperty("user.dir");
+        String caminhoArquivoClientes = diretorioAtual + "/TF_2023/src/Cliente.txt";
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminhoArquivoClientes))) {
+            for (Cliente cliente : clientes) {
+                if (!cliente.getCpf().equals(cpfCliente)) {
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(cliente.getEmail()).append(";")
+                            .append(cliente.getSenha()).append(";")
+                            .append(cliente.getNome()).append(";")
+                            .append(cliente.getCpf()).append(";");
+
+                    List<Integer> idsAplicativos = new ArrayList<>(cliente.getAplicativos().keySet());
+                    for (int i = 0; i < idsAplicativos.size(); i++) {
+                        sb.append(idsAplicativos.get(i));
+                        if (i < idsAplicativos.size() - 1) {
+                            sb.append(",");
+                        }
+                    }
+
+                    sb.append("\n");
+                    writer.write(sb.toString());
+                }
+            }
+            System.out.println("Cliente removido com sucesso!");
         } catch (IOException e) {
             e.printStackTrace();
         }

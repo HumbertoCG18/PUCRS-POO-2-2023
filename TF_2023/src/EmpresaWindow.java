@@ -2,12 +2,9 @@ package src;
 import javax.swing.*;
 import java.awt.*;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
@@ -69,6 +66,13 @@ public class EmpresaWindow extends JFrame {
         });
     }
 
+    private void abrirRemoverCliente() {
+        SwingUtilities.invokeLater(() -> {
+            RemoverClienteGUI removerClienteGUI = new RemoverClienteGUI(listaClientes);
+            removerClienteGUI.setVisible(true);
+        });
+    }
+
     private JPanel createClientePanel() {
         JPanel panel = new JPanel(new BorderLayout());
         JTable clienteTable = createClienteTable(listaClientes);
@@ -79,51 +83,30 @@ public class EmpresaWindow extends JFrame {
         JButton addButton = new JButton("Adicionar Cliente");
         addButton.addActionListener(e -> abrirCadastroCliente());
         JButton deleteButton = new JButton("Excluir Cliente");
-        deleteButton.addActionListener(e -> excluirCliente(clienteTable));
-        JButton saveButton = new JButton("Salvar Alteracoes");
-        saveButton.addActionListener(e -> {
-            salvarAlteracoes();
-            JOptionPane.showMessageDialog(this, "Alterações nos clientes salvas com sucesso!");
-            refreshClienteTable(); // Atualiza a tabela de clientes após salvar as alterações
-        });
+        deleteButton.addActionListener(e -> abrirRemoverCliente());
     
+        refreshClienteTable();
         JPanel buttonsPanel = new JPanel();
         buttonsPanel.add(addButton);
         buttonsPanel.add(deleteButton);
-        buttonsPanel.add(saveButton);
         panel.add(buttonsPanel, BorderLayout.SOUTH);
-    
+
         return panel;
     }
 
 
 
-    private void salvarAlteracoes() {
-        String caminhoArquivoCliente = System.getProperty("user.dir") + "/src/Cliente.txt";
-
-        try (PrintWriter writer = new PrintWriter(new FileWriter(caminhoArquivoCliente))) {
-            for (Cliente cliente : listaClientes) {
-                writer.println(cliente.getCpf() + ";" + cliente.getNome() + ";" + cliente.getEmail());
-            }
-            JOptionPane.showMessageDialog(this, "Alteracoes nos clientes salvas com sucesso!");
-        } catch (IOException e) {
-            exibirErroAoSalvar("clientes");
-        }
-    }
-
-
-    private void excluirCliente(JTable clienteTable) {
-        int selectedRow = clienteTable.getSelectedRow();
-        if (selectedRow >= 0) {
-            listaClientes.remove(selectedRow);
-            refreshClienteTable();
-        }
-    }
-
         private void abrirCadastroAplicativo() {
         SwingUtilities.invokeLater(() -> {
             CadastroAplicativoGUI cadastroAplicativoGUI = new CadastroAplicativoGUI(listaAplicativos);
             cadastroAplicativoGUI.setVisible(true);
+        });
+    }
+
+            private void abrirRemoverAplicativo() {
+        SwingUtilities.invokeLater(() -> {
+            RemoverAplicativoGUI removerAplicativoGUI = new RemoverAplicativoGUI(listaAplicativos);
+            removerAplicativoGUI.setVisible(true);
         });
     }
 
@@ -135,42 +118,17 @@ public class EmpresaWindow extends JFrame {
         panel.add(scrollPane, BorderLayout.CENTER);
     
         JButton addButton = new JButton("Adicionar Aplicativo");
-            addButton.addActionListener(e -> abrirCadastroAplicativo());
+        addButton.addActionListener(e -> abrirCadastroAplicativo());
         JButton deleteButton = new JButton("Excluir Aplicativo");
-        deleteButton.addActionListener(e -> excluirAplicativo(aplicativoTable));
-        JButton saveButton = new JButton("Salvar Alteracoes");
-        saveButton.addActionListener(e -> {
-            salvarAlteracoesAplicativos();
-            JOptionPane.showMessageDialog(this, "Alterações nos aplicativos salvas com sucesso!");
-            refreshAplicativoTable(); // Atualiza a tabela de aplicativos após salvar as alterações
-        });
-    
+        deleteButton.addActionListener(e -> abrirRemoverAplicativo());
+
+        refreshAplicativoTable();
         JPanel buttonsPanel = new JPanel();
         buttonsPanel.add(addButton);
         buttonsPanel.add(deleteButton);
-        buttonsPanel.add(saveButton);
         panel.add(buttonsPanel, BorderLayout.SOUTH);
     
         return panel;
-    }
-
-    private void salvarAlteracoesAplicativos() {
-        String diretorioAtual = System.getProperty("user.dir");
-        String caminhoArquivoAplicativos = diretorioAtual + "/src/Aplicativos.txt";
-    
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminhoArquivoAplicativos))) {
-            for (Aplicativo aplicativo : listaAplicativos) {
-                writer.write(String.format("%d;%s;%s;%.2f%n",
-                        aplicativo.getCodigo(),
-                        aplicativo.getNome(),
-                        aplicativo.getSistemaOperacional(),
-                        aplicativo.getValorMensal()));
-            }
-            JOptionPane.showMessageDialog(null, "Alteracoes nos aplicativos salvas com sucesso!");
-        } catch (IOException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Erro ao salvar alteracoes nos aplicativos.");
-        }
     }
 
     
@@ -178,10 +136,6 @@ public class EmpresaWindow extends JFrame {
         JTable clienteTable = createClienteTable(listaClientes);
         JScrollPane scrollPane = new JScrollPane(clienteTable);
         atualizarTabela(scrollPane);
-    }
-
-    private void exibirErroAoSalvar(String tipo) {
-        JOptionPane.showMessageDialog(this, "Erro ao salvar alteracoes nos " + tipo + ".");
     }
 
     
@@ -257,14 +211,6 @@ public class EmpresaWindow extends JFrame {
                 }
             }
         }
-
-    private void excluirAplicativo(JTable aplicativoTable) {
-        int selectedRow = aplicativoTable.getSelectedRow();
-        if (selectedRow >= 0) {
-            listaAplicativos.remove(selectedRow);
-            refreshAplicativoTable();
-        }
-    }
     
     private void refreshAplicativoTable() {
         JTable aplicativoTable = createAplicativoTable(listaAplicativos);
@@ -330,7 +276,7 @@ public class EmpresaWindow extends JFrame {
         listaAplicativos = carregarAplicativos(caminhoArquivoAplicativo);
     }
     
-        private <T> List<T> carregarDados(String caminhoArquivo, DataExtractor<T> extractor) {
+        private <T>List<T> carregarDados(String caminhoArquivo, DataExtractor<T> extractor) {
         List<T> dados = new ArrayList<>();
     
         try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
@@ -353,10 +299,10 @@ public class EmpresaWindow extends JFrame {
     }
 
 
-    private List<Cliente> carregarClientes(String caminhoArquivoCliente) {
-        return carregarDados(caminhoArquivoCliente, linha -> {
-            String[] partes = linha.split(";");
-            return (partes.length >= 4) ? new Cliente(partes[0].trim(), partes[2].trim(), partes[3].trim()) : null;
+private List<Cliente> carregarClientes(String caminhoArquivoCliente) {
+    return carregarDados(caminhoArquivoCliente, linha -> {
+        String[] partes = linha.split(";");
+        return (partes.length >= 4) ? new Cliente(partes[0].trim(), partes[2].trim(), partes[3].trim()) : null;
         });
     }
 
